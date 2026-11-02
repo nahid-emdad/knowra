@@ -1,0 +1,265 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ---------------------------------------------------------
+// ENUMS
+// ---------------------------------------------------------
+
+enum Role {
+  ADMIN
+  EDITOR
+  CONTRIBUTOR
+  USER
+}
+
+enum VerificationStatus {
+  DRAFT
+  PENDING_REVIEW
+  REVIEWED
+  NEEDS_CORRECTION
+  ARCHIVED
+}
+
+enum SourceType {
+  GOVERNMENT
+  ACADEMIC
+  RESEARCH_PAPER
+  EDUCATIONAL_INSTITUTION
+  OFFICIAL_DOCUMENTATION
+  BOOKS
+  REPUTABLE_PUBLICATIONS
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CHANGES_REQUESTED
+}
+
+enum ReviewDecision {
+  APPROVED
+  REJECTED
+  REQUEST_CHANGES
+}
+
+// ---------------------------------------------------------
+// MODELS
+// ---------------------------------------------------------
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  passwordHash  String?   @map("password_hash")
+  image         String?
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relationships
+  knowledgeItems KnowledgeItem[]
+  reviews        Review[]
+  revisions      Revision[]
+
+  @@map("users")
+}
+
+model Category {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  description String?    @db.Text
+  parentId    String?    @map("parent_id")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  // Self-relation for hierarchical categories
+  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Category[] @relation("CategoryHierarchy")
+
+  // Relationships
+  knowledgeItems KnowledgeItem[]
+
+  @@index([slug])
+  @@index([parentId])
+  @@map("categories")
+}
+
+model Tag {
+  id        String         @id @default(cuid())
+  name      String         @unique
+  slug      String         @unique
+  createdAt DateTime       @default(now()) @map("created_at")
+
+  knowledgeItems KnowledgeTag[]
+
+  @@index([slug])
+  @@map("tags")
+}
+
+model KnowledgeItem {
+  id              String             @id @default(cuid())
+  slug            String             @unique
+  title           String             @db.VarChar(255)
+  summary         String             @db.Text
+  content         String             @db.Text
+  language        String             @default("en") @db.VarChar(10) // 'en', 'bn', etc.
+  categoryId      String             @map("category_id")
+  status          VerificationStatus @default(DRAFT)
+  authorId        String             @map("author_id")
+  revisionNumber  Int                @default(1) @map("revision_number")
+  aiSummary       String?            @map("ai_summary") @db.Text
+  isAiGenerated   Boolean            @default(false) @map("is_ai_generated")
+  createdAt       DateTime           @default(now()) @map("created_at")
+  updatedAt       DateTime           @updatedAt @map("updated_at")
+  lastReviewedAt  DateTime?          @map("last_reviewed_at")
+
+  // Relationships
+  author          User               @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  category        Category           @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  tags            KnowledgeTag[]
+  sources         KnowledgeSource[]
+  revisions       Revision[]
+
+  // Translations linking
+  translationsAsOriginal Translation[] @relation("OriginalItem")
+  translationsAsItem     Translation[] @relation("TranslatedItem")
+
+  @@index([slug])
+  @@index([language])
+  @@index([status])
+  @@index([categoryId])
+  @@index([createdAt])
+  @@map("knowledge_items")
+}
+
+model Translation {
+  id              String             @id @default(cuid())
+  knowledgeItemId String             @map("knowledge_item_id")
+  originalItemId  String             @map("original_item_id")
+  language        String             @db.VarChar(10) // 'bn', 'ar', etc.
+  title           String             @db.VarChar(255)
+  summary         String             @db.Text
+  content         String             @db.Text
+  reviewStatus    VerificationStatus @default(DRAFT) @map("review_status")
+  createdAt       DateTime           @default(now()) @map("created_at")
+  updatedAt       DateTime           @updatedAt @map("updated_at")
+
+  // Relationships
+  knowledgeItem   KnowledgeItem      @relation("TranslatedItem", fields: [knowledgeItemId], references: [id], onDelete: Cascade)
+  originalItem    KnowledgeItem      @relation("OriginalItem", fields: [originalItemId], references: [id], onDelete: Cascade)
+
+  @@unique([originalItemId, language])
+  @@index([knowledgeItemId])
+  @@index([language])
+  @@index([reviewStatus])
+  @@map("translations")
+}
+
+model Source {
+  id              String            @id @default(cuid())
+  url             String            @db.Text
+  title           String            @db.VarChar(255)
+  publisher       String?           @db.VarChar(255)
+  author          String?           @db.VarChar(255)
+  sourceType      SourceType        @default(REPUTABLE_PUBLICATIONS) @map("source_type")
+  publicationDate DateTime?         @map("publication_date")
+  accessDate      DateTime          @default(now()) @map("access_date")
+  license         String?           @db.VarChar(100)
+  supportingLocation String?        @map("supporting_location") @db.VarChar(255)
+  language        String            @default("en") @db.VarChar(10)
+  createdAt       DateTime          @default(now()) @map("created_at")
+
+  // Many-to-many relationship via KnowledgeSource
+  knowledgeItems  KnowledgeSource[]
+
+  @@index([url])
+  @@index([sourceType])
+  @@map("sources")
+}
+
+model KnowledgeSource {
+  knowledgeItemId String        @map("knowledge_item_id")
+  sourceId        String        @map("source_id")
+  supportingNote  String?       @map("supporting_note") @db.Text
+  createdAt       DateTime      @default(now()) @map("created_at")
+
+  knowledgeItem   KnowledgeItem @relation(fields: [knowledgeItemId], references: [id], onDelete: Cascade)
+  source          Source        @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@id([knowledgeItemId, sourceId])
+  @@index([sourceId])
+  @@map("knowledge_sources")
+}
+
+model KnowledgeTag {
+  knowledgeItemId String        @map("knowledge_item_id")
+  tagId           String        @map("tag_id")
+
+  knowledgeItem   KnowledgeItem @relation(fields: [knowledgeItemId], references: [id], onDelete: Cascade)
+  tag             Tag           @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([knowledgeItemId, tagId])
+  @@index([tagId])
+  @@map("knowledge_tags")
+}
+
+model Submission {
+  id              String           @id @default(cuid())
+  title           String           @db.VarChar(255)
+  content         String           @db.Text
+  language        String           @default("en") @db.VarChar(10)
+  proposedSources String?          @map("proposed_sources") @db.Text
+  contributorName String           @map("contributor_name") @db.VarChar(255)
+  contributorEmail String?         @map("contributor_email") @db.VarChar(255)
+  status          SubmissionStatus @default(PENDING)
+  submittedAt     DateTime         @default(now()) @map("submitted_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+
+  // Review relationship
+  reviews         Review[]
+
+  @@index([status])
+  @@index([language])
+  @@map("submissions")
+}
+
+model Review {
+  id           String         @id @default(cuid())
+  submissionId String         @map("submission_id")
+  reviewerId   String         @map("reviewer_id")
+  decision     ReviewDecision
+  feedback     String?        @db.Text
+  reviewedAt   DateTime       @default(now()) @map("reviewed_at")
+
+  submission   Submission     @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  reviewer     User           @relation(fields: [reviewerId], references: [id], onDelete: Restrict)
+
+  @@index([submissionId])
+  @@index([reviewerId])
+  @@map("reviews")
+}
+
+model Revision {
+  id              String        @id @default(cuid())
+  knowledgeItemId String        @map("knowledge_item_id")
+  editorId        String        @map("editor_id")
+  previousContent String        @map("previous_content") @db.Text
+  newContent      String        @map("new_content") @db.Text
+  changeSummary   String?       @map("change_summary") @db.VarChar(255)
+  createdAt       DateTime      @default(now()) @map("created_at")
+
+  knowledgeItem   KnowledgeItem @relation(fields: [knowledgeItemId], references: [id], onDelete: Cascade)
+  editor          User          @relation(fields: [editorId], references: [id], onDelete: Restrict)
+
+  @@index([knowledgeItemId])
+  @@index([editorId])
+  @@map("revisions")
+}

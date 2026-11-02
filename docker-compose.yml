@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: knowra_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: knowra_admin
+      POSTGRES_PASSWORD: knowra_secret
+      POSTGRES_DB: knowra_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./prisma/init-extensions.sql:/docker-entrypoint-initdb.d/init-extensions.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U knowra_admin -d knowra_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
+    driver: local
