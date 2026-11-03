@@ -165,7 +165,7 @@ model Translation {
 
 model Source {
   id              String            @id @default(cuid())
-  url             String            @db.Text
+  url             String            @unique @db.VarChar(1000)
   title           String            @db.VarChar(255)
   publisher       String?           @db.VarChar(255)
   author          String?           @db.VarChar(255)
