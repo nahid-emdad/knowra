@@ -150,7 +150,14 @@ export default async function KnowledgeArticlePage({ params }: ArticlePageProps)
         </header>
 
         {/* AI Summary Banner (If Present) */}
-        {article.aiSummary && <AISummaryBanner summary={article.aiSummary} />}
+        {article.aiSummary && (
+          <AISummaryBanner
+            summary={article.aiSummary}
+            articleContent={article.content}
+            articleLanguage={article.language}
+            articleTitle={article.title}
+          />
+        )}
 
         {/* Article Body Content (Rendered Markdown) */}
         <article className="py-4">

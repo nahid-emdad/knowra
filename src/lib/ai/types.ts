@@ -61,6 +61,22 @@ export interface SuggestTagsResult {
   provider: string;
 }
 
+export interface SuggestRelatedOptions {
+  title: string;
+  category: string;
+  content: string;
+  language: string;
+  limit?: number;
+}
+
+export interface SuggestRelatedResult {
+  suggestedTopics: Array<{
+    title: string;
+    reason: string;
+  }>;
+  provider: string;
+}
+
 export interface AIProvider {
   readonly name: string;
   readonly isAvailable: boolean;
@@ -69,4 +85,5 @@ export interface AIProvider {
   translate(options: TranslateOptions): Promise<TranslateResult>;
   simplify(options: SimplifyOptions): Promise<SimplifyResult>;
   suggestTags(options: SuggestTagsOptions): Promise<SuggestTagsResult>;
+  suggestRelated(options: SuggestRelatedOptions): Promise<SuggestRelatedResult>;
 }

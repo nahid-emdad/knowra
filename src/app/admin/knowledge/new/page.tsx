@@ -29,6 +29,7 @@ export default function CreateArticleAdminPage() {
     sourceId: string;
     status: VerificationStatus;
     supportingNote: string;
+    tags: string[];
   }>({
     title: '',
     slug: '',
@@ -39,10 +40,109 @@ export default function CreateArticleAdminPage() {
     sourceId: 'src_nature_01',
     status: VerificationStatus.REVIEWED,
     supportingNote: '',
+    tags: [],
   });
 
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiMessage, setAiMessage] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+
+  const handleAISummarize = async () => {
+    if (!formData.content || formData.content.length < 20) {
+      setError('Please provide at least 20 characters of content before generating an AI summary.');
+      return;
+    }
+    setAiLoading(true);
+    setAiMessage('Generating AI summary draft...');
+    try {
+      const res = await fetch('/api/v1/ai/summarize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: formData.content,
+          language: formData.language,
+          maxLength: 250,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.data?.summary) {
+        setFormData((prev) => ({ ...prev, summary: data.data.summary }));
+        setAiMessage('AI Summary draft inserted. Human review required before publishing.');
+      }
+    } catch {
+      setError('Failed to generate AI summary.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const handleAISuggestTags = async () => {
+    if (!formData.title || !formData.content) {
+      setError('Please provide both title and content before generating tags.');
+      return;
+    }
+    setAiLoading(true);
+    setAiMessage('Analyzing content for relevant topic tags...');
+    try {
+      const res = await fetch('/api/v1/ai/tags', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: formData.title,
+          content: formData.content,
+          language: formData.language,
+          maxTags: 6,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.data?.tags) {
+        setFormData((prev) => ({ ...prev, tags: data.data.tags }));
+        setAiMessage(`Suggested ${data.data.tags.length} tags: ${data.data.tags.join(', ')}`);
+      }
+    } catch {
+      setError('Failed to suggest tags.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const handleAITranslateDraft = async () => {
+    if (!formData.title || !formData.content) {
+      setError('Please provide title and content to translate.');
+      return;
+    }
+    const targetLang = formData.language === 'en' ? 'bn' : 'en';
+    setAiLoading(true);
+    setAiMessage(`Translating to ${targetLang === 'bn' ? 'Bengali' : 'English'} draft...`);
+    try {
+      const res = await fetch('/api/v1/ai/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: formData.title,
+          content: formData.content,
+          sourceLanguage: formData.language,
+          targetLanguage: targetLang,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.data) {
+        setFormData((prev) => ({
+          ...prev,
+          title: data.data.translatedTitle,
+          content: data.data.translatedContent,
+          language: targetLang,
+          status: VerificationStatus.DRAFT, // Strict PRD Rule 5.4: Translated draft cannot inherit reviewed status automatically
+        }));
+        setAiMessage('Translated draft created with status set to DRAFT (Editor review required).');
+      }
+    } catch {
+      setError('Failed to translate draft.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   const handleTitleChange = (val: string) => {
     setFormData((prev) => ({
@@ -199,6 +299,68 @@ export default function CreateArticleAdminPage() {
               <option value={VerificationStatus.NEEDS_CORRECTION}>Needs Correction</option>
             </select>
           </div>
+        </div>
+
+        {/* AI Copilot / Assistant Toolbar (PRD Section 6) */}
+        <div className="p-4 rounded-xl bg-indigo-500/5 dark:bg-indigo-500/10 border border-indigo-500/20 space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-indigo-500 animate-pulse" />
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+                Knowra AI Editorial Assistant
+              </span>
+            </div>
+            <span className="text-[10px] text-muted-foreground font-mono">
+              PRD 6.3: AI Drafts require mandatory human editorial review
+            </span>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            <button
+              type="button"
+              onClick={handleAISummarize}
+              disabled={aiLoading}
+              className="px-3 py-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-medium border border-indigo-500/30 transition-colors flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Draft Summary</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleAISuggestTags}
+              disabled={aiLoading}
+              className="px-3 py-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-medium border border-indigo-500/30 transition-colors flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Suggest Tags</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleAITranslateDraft}
+              disabled={aiLoading}
+              className="px-3 py-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-medium border border-indigo-500/30 transition-colors flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Translate Draft ({formData.language === 'en' ? 'বাংলা' : 'English'})</span>
+            </button>
+          </div>
+
+          {aiMessage && (
+            <div className="text-[11px] text-indigo-600 dark:text-indigo-300 font-mono bg-indigo-500/5 p-2 rounded border border-indigo-500/15">
+              {aiMessage}
+            </div>
+          )}
+
+          {formData.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              <span className="text-[11px] text-muted-foreground mr-1">Generated Tags:</span>
+              {formData.tags.map((t) => (
+                <span key={t} className="px-2 py-0.5 rounded text-[10px] font-mono bg-secondary border border-border">
+                  #{t}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Summary */}
