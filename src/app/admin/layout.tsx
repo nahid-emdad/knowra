@@ -16,6 +16,7 @@ import {
   PlusCircle,
   Menu,
   X,
+  Globe,
 } from 'lucide-react';
 
 export default function AdminLayout({
@@ -56,6 +57,7 @@ export default function AdminLayout({
   const navLinks = [
     { href: '/admin', label: 'Overview', icon: LayoutDashboard },
     { href: '/admin/submissions', label: 'Submissions Queue', icon: CheckSquare, badge: '2' },
+    { href: '/admin/translations', label: 'Translation Queue', icon: Globe, badge: '1' },
     { href: '/admin/knowledge', label: 'Knowledge Items', icon: FileText },
     { href: '/admin/knowledge/new', label: 'Create Article', icon: PlusCircle },
     { href: '/admin/sources', label: 'Verified Sources', icon: Bookmark },
