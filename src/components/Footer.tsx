@@ -35,8 +35,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/api/v1" className="hover:text-foreground transition-colors">
-                  Module B: Developer API
+                <Link href="/docs" className="hover:text-foreground transition-colors">
+                  Module B: Developer API & Docs
                 </Link>
               </li>
               <li>

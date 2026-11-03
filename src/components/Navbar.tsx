@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Search, Moon, Sun, Globe, PlusCircle, Menu, X, ExternalLink, Atom } from 'lucide-react';
+import { BookOpen, Search, Moon, Sun, Globe, PlusCircle, Menu, X, ExternalLink, Atom, Code } from 'lucide-react';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -102,6 +102,15 @@ export default function Navbar() {
             <PlusCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             <span>Contribute</span>
           </Link>
+          <Link
+            href="/docs"
+            className={`flex items-center gap-1.5 hover:text-foreground transition-colors ${
+              pathname === '/docs' ? 'text-foreground font-semibold text-accent' : ''
+            }`}
+          >
+            <Code className="w-4 h-4 text-amber-500" />
+            <span>API Docs</span>
+          </Link>
           <a
             href="https://github.com/nahid-emdad/knowra"
             target="_blank"
@@ -182,6 +191,14 @@ export default function Navbar() {
           >
             <PlusCircle className="w-4 h-4 text-emerald-500" />
             <span>Contribute Knowledge</span>
+          </Link>
+          <Link
+            href="/docs"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-2 py-1 text-foreground"
+          >
+            <Code className="w-4 h-4 text-amber-500" />
+            <span>Developer API & Docs</span>
           </Link>
           <a
             href="https://github.com/nahid-emdad/knowra"
