@@ -14,6 +14,7 @@ import {
   Sparkles,
   ExternalLink,
   Layers,
+  Atom,
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -83,6 +84,13 @@ export default function HomePage() {
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
+                href="/constellation"
+                className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-sm transition-all flex items-center gap-2 border border-indigo-500/30 group"
+              >
+                <Atom className="w-4 h-4 text-indigo-200 group-hover:rotate-180 transition-transform duration-500" />
+                <span>Spatial Constellation (Graph)</span>
+              </Link>
+              <Link
                 href="/contribute"
                 className="px-6 py-3 rounded-xl bg-secondary text-secondary-foreground font-semibold text-sm hover:bg-secondary/80 border border-border transition-all"
               >
@@ -136,6 +144,49 @@ export default function HomePage() {
                 </div>
               </Link>
             ))}
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* SPATIAL CONSTELLATION SPOTLIGHT BANNER (Interactive Graph & Node Dossier) */}
+        {/* ========================================================================= */}
+        <section className="max-w-6xl mx-auto px-6 py-6">
+          <div className="relative overflow-hidden rounded-2xl border border-indigo-500/20 bg-gradient-to-r from-slate-950 via-indigo-950/40 to-slate-950 p-8 text-white shadow-xl">
+            <div className="absolute top-0 right-0 -mt-12 -mr-12 w-64 h-64 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none" />
+            
+            <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+              <div className="max-w-xl">
+                <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-mono font-medium border border-indigo-500/30 mb-3">
+                  <Atom className="w-3.5 h-3.5 text-indigo-400 animate-spin" />
+                  <span>Direction 3 Selected • Interactive Node Dossier</span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-serif font-bold text-white mb-2">
+                  Explore via Spatial Knowledge Constellation
+                </h3>
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  Navigate multidisciplinary knowledge as an interactive SVG particle graph. Click any node to open the live scientific dossier with real-time chemical formulas, bilingual Bengali/English translations, and direct peer-reviewed citations.
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center gap-3">
+                <Link
+                  href="/constellation"
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white font-semibold text-sm shadow-lg shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 group"
+                >
+                  <span>Launch Constellation</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <a
+                  href="/prototype.html"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full sm:w-auto px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-medium text-xs border border-white/10 transition-all flex items-center justify-center gap-1.5"
+                >
+                  <span>Inspect Switcher Prototype</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
           </div>
         </section>
 

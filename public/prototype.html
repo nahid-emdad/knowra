@@ -3,28 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Knowra — Live Interactive Visual Design Prototypes (4 Directions)</title>
-  
-  <!-- Fonts: Distinctive pairings per Creative UI/UX rules (Crimson Pro, Atkinson Hyperlegible, Plus Jakarta Sans, Space Grotesk, Noto Sans Bengali, Hind Siliguri) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <title>Knowra — 4 Bespoke Architectural Prototypes</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Distinctive High-Personality Google Fonts (Strict Prohibition of Inter Default) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Noto+Serif+Bengali:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
-            editorialSerif: ['"Crimson Pro"', 'Georgia', 'serif'],
-            editorialBody: ['"Atkinson Hyperlegible"', 'sans-serif'],
-            bengali: ['"Noto Sans Bengali"', '"Hind Siliguri"', 'sans-serif'],
-            techSans: ['"Space Grotesk"', 'sans-serif'],
-            techMono: ['"JetBrains Mono"', 'monospace'],
-            universalSans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            swissSans: ['"Syne"', 'sans-serif'],
+            'editorial-title': ['Cinzel', 'serif'],
+            'editorial-body': ['Newsreader', 'Georgia', 'serif'],
+            'editorial-bn': ['Noto Serif Bengali', 'serif'],
+            'workbench-mono': ['JetBrains Mono', 'monospace'],
+            'workbench-sans': ['Space Grotesk', 'sans-serif'],
+            'canvas-sans': ['Plus Jakarta Sans', 'sans-serif'],
+            'canvas-display': ['Outfit', 'sans-serif'],
+            'swiss-title': ['Syne', 'sans-serif'],
+            'bn': ['Hind Siliguri', 'sans-serif'],
           }
         }
       }
@@ -32,731 +35,835 @@
   </script>
 
   <style>
-    /* Smooth theme transitions */
-    * {
-      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.15s ease;
-    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(150, 150, 150, 0.25); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(150, 150, 150, 0.45); }
     
-    /* Subtle borders rule enforcement */
-    .border-subtle {
-      border: 1px solid rgba(148, 163, 184, 0.2);
-    }
-    .dark .border-subtle {
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
+    /* Subtle transitions */
+    .view-transition { transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
 
-    /* Option 1 Custom Palette: Scholarly Neo-Lexicon */
-    .opt-scholarly {
-      --bg: #FDFBF7;
-      --surface: #F5EFE6;
-      --surface-border: #E6DCB8;
-      --text: #1C1917;
-      --muted: #57534E;
-      --accent: #B45309;
-      --badge-bg: #FEF3C7;
-      --badge-text: #92400E;
+    /* Graph node pulse */
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 0.9; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.04); }
     }
-    .dark .opt-scholarly {
-      --bg: #12100E;
-      --surface: #1C1917;
-      --surface-border: #292524;
-      --text: #F5F5F4;
-      --muted: #A8A29E;
-      --accent: #D97706;
-      --badge-bg: #292524;
-      --badge-text: #FBBF24;
-    }
-
-    /* Option 2 Custom Palette: Technical Workbench */
-    .opt-workbench {
-      --bg: #0B0F17;
-      --surface: #111827;
-      --surface-border: #1F2937;
-      --text: #F9FAFB;
-      --muted: #9CA3AF;
-      --accent: #10B981;
-      --badge-bg: rgba(16, 185, 129, 0.12);
-      --badge-text: #34D399;
-    }
-
-    /* Option 3 Custom Palette: Universal Bilingual */
-    .opt-universal {
-      --bg: #FAFAFA;
-      --surface: #FFFFFF;
-      --surface-border: #E5E7EB;
-      --text: #0F172A;
-      --muted: #64748B;
-      --accent: #2563EB;
-      --badge-bg: #EFF6FF;
-      --badge-text: #1D4ED8;
-    }
-    .dark .opt-universal {
-      --bg: #0F172A;
-      --surface: #1E293B;
-      --surface-border: #334155;
-      --text: #F8FAFC;
-      --muted: #94A3B8;
-      --accent: #38BDF8;
-      --badge-bg: #1E3A8A;
-      --badge-text: #93C5FD;
-    }
-
-    /* Option 4 Custom Palette: Swiss Minimalist */
-    .opt-swiss {
-      --bg: #FFFFFF;
-      --surface: #F4F4F5;
-      --surface-border: #D4D4D8;
-      --text: #09090B;
-      --muted: #71717A;
-      --accent: #E11D48;
-      --badge-bg: #09090B;
-      --badge-text: #FFFFFF;
-    }
-    .dark .opt-swiss {
-      --bg: #09090B;
-      --surface: #18181B;
-      --surface-border: #27272A;
-      --text: #FAFAFA;
-      --muted: #A1A1AA;
-      --accent: #FB7185;
-      --badge-bg: #FAFAFA;
-      --badge-text: #09090B;
-    }
+    .node-pulse { animation: pulse-subtle 3s ease-in-out infinite; }
   </style>
 </head>
-<body class="bg-zinc-900 text-zinc-100 min-h-screen flex flex-col font-sans antialiased selection:bg-amber-500/20 pb-32">
+<body class="bg-zinc-950 text-zinc-100 min-h-screen selection:bg-amber-500/25 selection:text-amber-200 antialiased pb-28">
 
   <!-- ========================================================================= -->
-  <!-- FLOATING PERSISTENT CONCEPT SWITCHER BAR (RULE COMPLIANCE) -->
+  <!-- FLOATING PERSISTENT CONCEPT SWITCHER BAR                                  -->
   <!-- ========================================================================= -->
-  <aside aria-label="Prototype Style Switcher" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-4xl px-4 pointer-events-none">
-    <div class="pointer-events-auto bg-zinc-950/90 backdrop-blur-md border border-white/10 rounded-2xl p-2.5 shadow-2xl flex flex-wrap items-center justify-between gap-3 text-xs">
+  <aside aria-label="Prototype Style Switcher" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-full max-w-5xl px-4 pointer-events-none">
+    <div class="pointer-events-auto bg-zinc-950/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2.5 shadow-2xl flex flex-wrap items-center justify-between gap-3 text-xs">
       
-      <!-- Brand & Mode Title -->
-      <div class="flex items-center gap-2 pl-2">
-        <span class="w-6 h-6 rounded-md bg-amber-500 text-zinc-950 font-bold flex items-center justify-center text-xs">K</span>
+      <!-- Logo & Meta Info -->
+      <div class="flex items-center gap-2.5 pl-2">
+        <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 text-zinc-950 font-black flex items-center justify-center text-sm shadow-sm font-workbench-sans">
+          K
+        </div>
         <div>
-          <p class="font-semibold text-zinc-100 text-[13px] leading-tight">Knowra Visual Studio</p>
-          <p class="text-[10px] text-zinc-400">4 Bespoke Design Directions</p>
+          <div class="flex items-center gap-1.5">
+            <span class="font-bold text-zinc-100 text-[13px] tracking-tight">Knowra Visual Lab</span>
+            <span class="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">4 Distinct Layouts</span>
+          </div>
+          <p id="active-direction-meta" class="text-[10px] text-zinc-400 font-mono">01. Editorial Ledger: Asymmetric Split & Margin Citations</p>
         </div>
       </div>
 
-      <!-- Option Switcher Tabs -->
-      <div class="flex items-center bg-zinc-900/90 p-1 rounded-xl border border-white/5 space-x-1">
-        <button onclick="switchOption(1)" id="tab-1" class="px-3 py-1.5 rounded-lg font-medium transition-all duration-200 bg-amber-500 text-zinc-950 font-semibold shadow-sm flex items-center gap-1.5">
-          <span class="text-[10px] opacity-75 font-mono">01</span>
-          <span>Scholarly Lexicon</span>
+      <!-- 4 Bespoke Concept Buttons (Dynamically Researched) -->
+      <nav class="flex items-center bg-zinc-900/90 p-1 rounded-xl border border-white/5 gap-1" aria-label="View switchers">
+        <button onclick="activateView(1)" id="btn-view-1" class="px-3 py-1.5 rounded-lg font-medium transition-all duration-200 bg-amber-500 text-zinc-950 font-semibold shadow-sm flex items-center gap-1.5">
+          <span class="text-[10px] font-mono opacity-80">01</span>
+          <span>Editorial Ledger</span>
         </button>
-        <button onclick="switchOption(2)" id="tab-2" class="px-3 py-1.5 rounded-lg font-medium transition-all duration-200 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 flex items-center gap-1.5">
-          <span class="text-[10px] opacity-75 font-mono">02</span>
-          <span>Tech Workbench</span>
+        <button onclick="activateView(2)" id="btn-view-2" class="px-3 py-1.5 rounded-lg font-medium transition-all duration-200 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 flex items-center gap-1.5">
+          <span class="text-[10px] font-mono opacity-80">02</span>
+          <span>Dual-Stream Reader</span>
         </button>
-        <button onclick="switchOption(3)" id="tab-3" class="px-3 py-1.5 rounded-lg font-medium transition-all duration-200 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 flex items-center gap-1.5">
-          <span class="text-[10px] opacity-75 font-mono">03</span>
-          <span>Universal Primer</span>
+        <button onclick="activateView(3)" id="btn-view-3" class="px-3 py-1.5 rounded-lg font-medium transition-all duration-200 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 flex items-center gap-1.5">
+          <span class="text-[10px] font-mono opacity-80">03</span>
+          <span>Knowledge Graph</span>
         </button>
-        <button onclick="switchOption(4)" id="tab-4" class="px-3 py-1.5 rounded-lg font-medium transition-all duration-200 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 flex items-center gap-1.5">
-          <span class="text-[10px] opacity-75 font-mono">04</span>
-          <span>Swiss Minimalist</span>
+        <button onclick="activateView(4)" id="btn-view-4" class="px-3 py-1.5 rounded-lg font-medium transition-all duration-200 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 flex items-center gap-1.5">
+          <span class="text-[10px] font-mono opacity-80">04</span>
+          <span>Swiss Grid Matrix</span>
         </button>
-      </div>
+      </nav>
 
-      <!-- Controls: Language Toggle & Dark Mode -->
-      <div class="flex items-center gap-2 pr-1">
-        <!-- Language Switcher -->
-        <button onclick="toggleLanguage()" id="lang-btn" class="px-2.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-white/10 flex items-center gap-1.5 font-medium transition-all">
-          <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg>
-          <span id="lang-label">বাংলা (BN)</span>
+      <!-- Global Controls: Lang & Theme -->
+      <div class="flex items-center gap-1.5 pr-1">
+        <button onclick="toggleGlobalLang()" class="px-2.5 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-white/10 text-zinc-300 font-medium transition-colors flex items-center gap-1.5 text-[11px]">
+          <svg class="w-3.5 h-3.5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+          <span id="lang-btn-text">বাংলা (BN)</span>
         </button>
-        <!-- Dark Mode Toggle -->
-        <button onclick="toggleDarkMode()" id="dark-btn" class="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-white/10" title="Toggle Theme">
-          <svg id="moon-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+        <button onclick="toggleGlobalTheme()" class="p-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-white/10 text-zinc-300 transition-colors" title="Toggle Theme">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         </button>
       </div>
 
     </div>
   </aside>
 
-  <!-- ========================================================================= -->
-  <!-- MAIN PROTOTYPE CONTAINER -->
-  <!-- ========================================================================= -->
-  <div id="prototype-viewport" class="w-full flex-1 opt-scholarly bg-[var(--bg)] text-[var(--text)] transition-colors duration-300">
 
-    <!-- TOP HEADER -->
-    <header class="border-b border-subtle sticky top-0 z-40 bg-[var(--bg)]/90 backdrop-blur-md">
-      <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        
-        <!-- Logo & Brand Concept -->
-        <div class="flex items-center gap-3">
-          <div id="brand-badge" class="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-lg bg-[var(--accent)] text-white shadow-sm">
-            K
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <span id="brand-name" class="font-bold text-xl tracking-tight">Knowra</span>
-              <span id="concept-tag" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--badge-bg)] text-[var(--badge-text)] font-semibold uppercase tracking-wider">
-                Option 1: Scholarly Lexicon
-              </span>
-            </div>
-            <p id="brand-sub" class="text-[11px] text-[var(--muted)]">Multilingual Open Knowledge Infrastructure</p>
-          </div>
-        </div>
-
-        <!-- Navigation Links -->
-        <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
-          <a href="#topics" class="hover:text-[var(--accent)] transition-colors" data-i18n="nav-topics">Categories</a>
-          <a href="#articles" class="hover:text-[var(--accent)] transition-colors" data-i18n="nav-explore">Explore Knowledge</a>
-          <a href="#sources" class="hover:text-[var(--accent)] transition-colors" data-i18n="nav-sources">Verified Sources</a>
-          <a href="https://github.com/nahid-emdad/knowra" target="_blank" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-subtle hover:bg-[var(--surface)] text-xs font-mono">
-            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path></svg>
-            GitHub
-          </a>
-        </nav>
-
+  <!-- ========================================================================================= -->
+  <!-- DIRECTION 01: THE LIVING ENCYCLOPEDIA (EDITORIAL ASYMMETRIC LEDGER)                       -->
+  <!-- Architecture: Sticky Archival Index Sidebar (Left) + Reader Stream with Margin Sidenotes -->
+  <!-- ========================================================================================= -->
+  <section id="view-dir-1" class="prototype-view min-h-screen bg-[#FAF7F2] text-stone-900 dark:bg-[#121110] dark:text-stone-100 transition-colors">
+    
+    <!-- Archival Masthead -->
+    <header class="border-b border-stone-200/80 dark:border-stone-800/80 py-3 px-6 text-xs uppercase tracking-widest font-mono text-stone-500 dark:text-stone-400 flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <span class="font-bold text-stone-900 dark:text-stone-100">KNOWRA ARCHIVES</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+        <span>Vol. IV • Peer-Reviewed Universal Knowledge Infrastructure</span>
+      </div>
+      <div class="flex items-center gap-6">
+        <span>Est. 2026 • Open Access (Apache-2.0)</span>
+        <span class="px-2 py-0.5 bg-stone-200/60 dark:bg-stone-800/80 rounded font-semibold text-stone-700 dark:text-stone-300">100% Primary Sources</span>
       </div>
     </header>
 
-    <!-- HERO SECTION (SEARCH-FOCUSED WITH OPTION-SPECIFIC FLAVOR) -->
-    <section class="max-w-5xl mx-auto px-6 pt-16 pb-12 text-center">
+    <!-- Main Container: Asymmetric Split Layout -->
+    <div class="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-12 gap-10">
       
-      <!-- Option Philosophy Pill -->
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--badge-bg)] text-[var(--badge-text)] text-xs font-medium mb-6 border border-subtle">
-        <span class="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse"></span>
-        <span id="concept-desc">Scholarly Editorial: Academic typography, warm archival tone, margin source citations.</span>
+      <!-- LEFT COLUMN: Sticky Archival Index & Verification Dossier (4 Cols) -->
+      <aside class="lg:col-span-4 space-y-8">
+        
+        <!-- Search in Ledger Style -->
+        <div class="p-5 rounded-xl border border-stone-300/80 dark:border-stone-800 bg-white/70 dark:bg-stone-900/60 backdrop-blur-sm shadow-sm space-y-4">
+          <div class="flex items-center justify-between text-xs font-mono text-stone-500">
+            <span>INDEX SEARCH</span>
+            <kbd class="px-1.5 py-0.5 text-[10px] bg-stone-100 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded">⌘K</kbd>
+          </div>
+          <div class="relative">
+            <input type="text" placeholder="Search archive (e.g. 'Photosynthesis', 'Solar System')..." class="w-full text-sm py-2.5 pl-9 pr-3 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50/50 dark:bg-stone-950/50 text-stone-900 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:ring-1 focus:ring-amber-600 font-editorial-body text-base">
+            <svg class="w-4 h-4 absolute left-3 top-3.5 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+        </div>
+
+        <!-- Archival Classification Tree -->
+        <div class="p-6 rounded-xl border border-stone-300/80 dark:border-stone-800 bg-white/70 dark:bg-stone-900/60 shadow-sm space-y-4">
+          <h3 class="text-xs font-mono uppercase tracking-widest text-amber-700 dark:text-amber-500 font-bold flex items-center gap-2">
+            <span class="w-2 h-2 rounded-sm bg-amber-600"></span>
+            Classification Ledger
+          </h3>
+          <ul class="space-y-2 text-sm font-editorial-body">
+            <li class="flex items-center justify-between p-2 rounded-md bg-stone-100/80 dark:bg-stone-800/80 font-medium text-stone-900 dark:text-stone-100">
+              <span class="flex items-center gap-2">
+                <span class="font-mono text-xs text-stone-400">01</span>
+                <span>Biological Energetics (জীবশক্তি)</span>
+              </span>
+              <span class="text-xs font-mono text-amber-700 dark:text-amber-400 font-bold">142 Entries</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded-md hover:bg-stone-100 dark:hover:bg-stone-800/50 text-stone-600 dark:text-stone-400 transition-colors cursor-pointer">
+              <span class="flex items-center gap-2">
+                <span class="font-mono text-xs text-stone-400">02</span>
+                <span>Astrophysical Dynamics (জ্যোতির্বিজ্ঞান)</span>
+              </span>
+              <span class="text-xs font-mono text-stone-400">89 Entries</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded-md hover:bg-stone-100 dark:hover:bg-stone-800/50 text-stone-600 dark:text-stone-400 transition-colors cursor-pointer">
+              <span class="flex items-center gap-2">
+                <span class="font-mono text-xs text-stone-400">03</span>
+                <span>Quantum & Material (পদার্থবিজ্ঞান)</span>
+              </span>
+              <span class="text-xs font-mono text-stone-400">215 Entries</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded-md hover:bg-stone-100 dark:hover:bg-stone-800/50 text-stone-600 dark:text-stone-400 transition-colors cursor-pointer">
+              <span class="flex items-center gap-2">
+                <span class="font-mono text-xs text-stone-400">04</span>
+                <span>Historiography of Bengal (বাংলার ইতিহাস)</span>
+              </span>
+              <span class="text-xs font-mono text-stone-400">104 Entries</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Verification Protocol Cert -->
+        <div class="p-5 rounded-xl border border-stone-200 dark:border-stone-800/80 bg-stone-100/60 dark:bg-stone-900/30 text-xs font-editorial-body space-y-3">
+          <div class="flex items-center gap-2 text-stone-700 dark:text-stone-300 font-semibold font-mono text-[11px]">
+            <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            PEER-REVIEW EDITORIAL STANDARD
+          </div>
+          <p class="text-stone-600 dark:text-stone-400 leading-relaxed">
+            Every entry published under Knowra is verified by academic subject specialists. Unanchored claims and hallucinated AI text are rigorously purged prior to public indexing.
+          </p>
+        </div>
+
+      </aside>
+
+      <!-- RIGHT COLUMN: Deep Editorial Reading Stream with Margin Annotations (8 Cols) -->
+      <main class="lg:col-span-8 space-y-12">
+        
+        <!-- Document Headline Banner -->
+        <article class="p-8 lg:p-12 rounded-2xl border border-stone-300/80 dark:border-stone-800 bg-white/90 dark:bg-stone-900/80 shadow-md space-y-6">
+          
+          <div class="flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-stone-500 pb-4 border-b border-stone-200 dark:border-stone-800">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 font-bold">MONOGRAPH #BIO-409</span>
+              <span>Primary Discipline: Plant Physiology</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-emerald-700 dark:text-emerald-400 font-semibold">● Peer-Reviewed & Verified</span>
+              <span>DOI: 10.1038/nature08431</span>
+            </div>
+          </div>
+
+          <!-- Giant Editorial Headline with bilingual toggle -->
+          <div class="space-y-4">
+            <h1 class="font-editorial-title text-3xl sm:text-5xl font-bold tracking-tight text-stone-900 dark:text-stone-50 leading-[1.15]">
+              Photosynthesis: The Biological Engine of the Biosphere
+            </h1>
+            <p class="font-editorial-bn text-xl sm:text-2xl text-amber-900/80 dark:text-amber-200/80 leading-relaxed font-semibold">
+              সালোকসংশ্লেষণ: সৌরশক্তি থেকে জীবমণ্ডলের রাসায়নিক রূপান্তর প্রক্রিয়া
+            </p>
+          </div>
+
+          <!-- Scholarly Metadata Ledger -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4 px-5 rounded-xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200/80 dark:border-stone-800 text-xs font-mono">
+            <div>
+              <span class="text-stone-400 block text-[10px]">LEAD SCHOLAR</span>
+              <span class="font-semibold text-stone-800 dark:text-stone-200">Prof. D. Deisenhofer</span>
+            </div>
+            <div>
+              <span class="text-stone-400 block text-[10px]">REVIEWED BY</span>
+              <span class="font-semibold text-stone-800 dark:text-stone-200">Max Planck Institute</span>
+            </div>
+            <div>
+              <span class="text-stone-400 block text-[10px]">ANCHORED SOURCES</span>
+              <span class="font-semibold text-stone-800 dark:text-stone-200">4 Seminal Papers</span>
+            </div>
+            <div>
+              <span class="text-stone-400 block text-[10px]">TRANSLATION</span>
+              <span class="font-semibold text-emerald-600 dark:text-emerald-400">Verified BN + EN</span>
+            </div>
+          </div>
+
+          <!-- Academic Exposition with Sidenote Anchor -->
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 pt-4 font-editorial-body text-lg text-stone-800 dark:text-stone-200 leading-relaxed">
+            
+            <div class="md:col-span-8 space-y-4">
+              <p class="first-letter:text-5xl first-letter:font-editorial-title first-letter:font-bold first-letter:mr-3 first-letter:float-left first-letter:text-amber-700 dark:first-letter:text-amber-500">
+                Photosynthesis is the fundamental photochemical transduction mechanism through which oxygenic phototrophs convert atmospheric carbon dioxide (<span class="font-mono text-sm bg-stone-100 dark:bg-stone-800 px-1 py-0.5 rounded">CO₂</span>) and water into biochemical energy in the form of d-glucose.
+              </p>
+              <p>
+                In the Bengali scientific lexicon, এটি <span class="font-semibold text-stone-900 dark:text-stone-100 font-editorial-bn">সালোকসংশ্লেষণ</span> নামে পরিচিত, যা প্রত্যক্ষভাবে উদ্ভিদের ক্লোরোপ্লাস্টে অবস্থিত থাইলাকয়েড মেমব্রেনে সংঘটিত হয়।
+              </p>
+              
+              <!-- Chemical Formulation Box in Academic Style -->
+              <div class="my-6 p-4 rounded-lg bg-stone-100 dark:bg-stone-800/60 border-l-4 border-amber-600 font-workbench-mono text-sm text-stone-900 dark:text-stone-100">
+                <span class="text-[10px] uppercase tracking-widest text-stone-400 block mb-1">Empirical Reaction Equation</span>
+                6CO₂ + 6H₂O + hν (Photons) ⟶ C₆H₁₂O₆ + 6O₂ (ΔG°' = +2870 kJ/mol)
+              </div>
+            </div>
+
+            <!-- Sidenote Citation / Margin Note (True Editorial Feature) -->
+            <div class="md:col-span-4 border-l border-stone-200 dark:border-stone-800 pl-4 space-y-4 text-xs font-editorial-body text-stone-500 dark:text-stone-400">
+              <div class="space-y-1">
+                <span class="font-mono font-bold text-amber-700 dark:text-amber-400 text-[10px] block">PRIMARY SOURCE [1]</span>
+                <p class="italic text-stone-700 dark:text-stone-300">Nature Publishing Group (Deisenhofer & Michel, Crystallographic proof of reaction centers).</p>
+                <a href="https://www.nature.com/articles/nature08431" target="_blank" class="text-amber-600 dark:text-amber-400 hover:underline font-mono text-[10px] block mt-1">View DOI Reference ↗</a>
+              </div>
+              <div class="pt-3 border-t border-stone-200/60 dark:border-stone-800/60">
+                <span class="font-mono font-bold text-stone-600 dark:text-stone-300 text-[10px] block">CURATOR NOTE</span>
+                <p>Term verified against Bangla Academy Scientific Glossary (বিজ্ঞান পরিভাষা কোষ).</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Citation Export Footer -->
+          <div class="pt-6 border-t border-stone-200 dark:border-stone-800 flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
+            <span class="text-stone-500">How to cite: Knowra Academic Archive (2026), Monograph #BIO-409</span>
+            <button onclick="alert('Citation copied in BibTeX & APA format!')" class="px-3 py-1.5 rounded-lg border border-stone-300 dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-800 dark:text-stone-200 transition-colors flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg>
+              <span>Copy Academic Citation (APA / BibTeX)</span>
+            </button>
+          </div>
+
+        </article>
+
+      </main>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================================================= -->
+  <!-- DIRECTION 02: THE BILINGUAL DUAL-STREAM READER (SYNCHRONIZED COMPARATIVE WORKSPACE)       -->
+  <!-- Architecture: Side-by-Side Paragraph-Lock Reader + In-Text Source Anchoring & Translation Diff -->
+  <!-- ========================================================================================= -->
+  <section id="view-dir-2" class="prototype-view hidden min-h-screen bg-[#0F141C] text-slate-200 font-canvas-sans">
+    
+    <!-- Reader Command & Sync Controller Bar -->
+    <header class="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md px-6 py-3 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-20 text-xs">
+      <div class="flex items-center gap-3">
+        <span class="px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 font-mono font-bold border border-sky-500/20">
+          DUAL-STREAM SYNCHRONIZED READER
+        </span>
+        <span class="text-slate-400 hidden sm:inline">English (Source) ⇄ বাংলা (প্রমিত রূপান্তর)</span>
       </div>
 
-      <!-- Main Headline -->
-      <h1 id="hero-title" class="text-4xl sm:text-6xl font-bold tracking-tight mb-4 text-[var(--text)]">
-        Knowledge Without Boundaries.
-      </h1>
-      
-      <!-- Subtitle -->
-      <p id="hero-sub" class="text-lg sm:text-xl text-[var(--muted)] max-w-2xl mx-auto mb-10 leading-relaxed">
-        Discover, understand, and share reliable knowledge in your language. Every published entry is anchored to primary, verified sources.
-      </p>
+      <div class="flex items-center gap-3 font-mono text-[11px]">
+        <span class="flex items-center gap-1 text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+          <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          PARAGRAPH-LOCK: ON
+        </span>
+        <span class="text-slate-500">|</span>
+        <span class="text-slate-400">Total Segments: 12</span>
+        <button onclick="alert('Toggled Sentence-Level Source Anchoring Inspector')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors">
+          Inspect Citations
+        </button>
+      </div>
+    </header>
 
-      <!-- LIVE SEARCH BAR -->
-      <div class="max-w-2xl mx-auto relative mb-6">
-        <div class="flex items-center bg-[var(--surface)] border border-subtle rounded-xl shadow-lg px-4 py-3.5 focus-within:ring-2 focus-within:ring-[var(--accent)] transition-all">
-          <svg class="w-5 h-5 text-[var(--muted)] mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-          <input 
-            type="text" 
-            id="live-search-input" 
-            oninput="handleSearch(this.value)"
-            placeholder="Search verified knowledge (e.g. 'Photosynthesis', 'সালোকসংশ্লেষণ', 'Solar')..." 
-            class="w-full bg-transparent border-none outline-none text-base text-[var(--text)] placeholder-[var(--muted)]"
-          />
-          <span class="text-xs font-mono px-2 py-1 rounded bg-[var(--bg)] border border-subtle text-[var(--muted)] hidden sm:inline-block">
-            ⌘K
-          </span>
+    <!-- Side-by-Side Dual-Stream Grid -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+      
+      <!-- Article Top Anchor Header -->
+      <div class="p-6 rounded-2xl bg-slate-900/70 border border-slate-800/80 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-mono text-sky-400 font-bold uppercase tracking-wider block mb-1">Comparative Study #BIO-2026</span>
+          <h1 class="text-2xl sm:text-3xl font-bold font-canvas-display text-white">
+            Photosynthetic Energy Transduction (সালোকসংশ্লেষণ প্রক্রিয়ার শক্তিতত্ত্ব)
+          </h1>
+        </div>
+        <div class="flex items-center gap-2 text-xs font-mono">
+          <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700">Verified by 2 Academicians</span>
+          <span class="px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">100% Sourced</span>
         </div>
       </div>
 
-      <!-- Category Filter Pills -->
-      <div id="category-pills" class="flex flex-wrap items-center justify-center gap-2 text-xs">
-        <button onclick="filterCategory('all')" class="cat-pill active px-3 py-1.5 rounded-lg bg-[var(--accent)] text-white font-medium shadow-sm transition-all">
-          All Topics (সব বিষয়)
-        </button>
-        <button onclick="filterCategory('science')" class="cat-pill px-3 py-1.5 rounded-lg bg-[var(--surface)] text-[var(--muted)] hover:text-[var(--text)] border border-subtle transition-all">
-          Science (বিজ্ঞান)
-        </button>
-        <button onclick="filterCategory('technology')" class="cat-pill px-3 py-1.5 rounded-lg bg-[var(--surface)] text-[var(--muted)] hover:text-[var(--text)] border border-subtle transition-all">
-          Technology (প্রযুক্তি)
-        </button>
-        <button onclick="filterCategory('history')" class="cat-pill px-3 py-1.5 rounded-lg bg-[var(--surface)] text-[var(--muted)] hover:text-[var(--text)] border border-subtle transition-all">
-          History (ইতিহাস)
-        </button>
-        <button onclick="filterCategory('environment')" class="cat-pill px-3 py-1.5 rounded-lg bg-[var(--surface)] text-[var(--muted)] hover:text-[var(--text)] border border-subtle transition-all">
-          Environment (পরিবেশ)
-        </button>
+      <!-- Synchronized Reading Streams (2 Columns Parallel) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- LEFT COLUMN: Canonical English Source Stream -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-400">
+            <span class="font-bold text-sky-400">CANONICAL TEXT (ENGLISH)</span>
+            <span>Source: Peer-Reviewed Literature</span>
+          </div>
+
+          <!-- Paragraph 1 EN -->
+          <div class="p-5 rounded-xl bg-slate-900/50 hover:bg-slate-900 border border-slate-800/80 transition-all space-y-3 group">
+            <div class="flex items-center justify-between text-xs font-mono text-slate-500">
+              <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-bold">§ 1.01</span>
+              <span class="text-sky-400 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">Anchored to Nature 2008</span>
+            </div>
+            <p class="text-base text-slate-200 leading-relaxed font-editorial-body text-[17px]">
+              "Photosynthesis operates as the primary energetic gateway for the planetary biosphere. Photons captured by antenna complexes within Photosystem II induce a rapid charge separation that facilitates the oxidation of water molecules into molecular oxygen and high-energy protons."
+            </p>
+            <div class="pt-2 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-500 font-mono text-[11px]">
+              <span>Key Mechanism: Charge Separation</span>
+              <button onclick="alert('Source Anchor: Nature Paper Vol 451, pp. 62–67')" class="text-sky-400 hover:underline">View Source Proof [↗]</button>
+            </div>
+          </div>
+
+          <!-- Paragraph 2 EN -->
+          <div class="p-5 rounded-xl bg-slate-900/50 hover:bg-slate-900 border border-slate-800/80 transition-all space-y-3 group">
+            <div class="flex items-center justify-between text-xs font-mono text-slate-500">
+              <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-bold">§ 1.02</span>
+              <span class="text-sky-400 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">Anchored to Cell Biology</span>
+            </div>
+            <p class="text-base text-slate-200 leading-relaxed font-editorial-body text-[17px]">
+              "The generated transmembrane proton gradient subsequently drives the rotating enzymatic machinery of ATP Synthase, synthesizing ATP from adenosine diphosphate and inorganic phosphate in the stroma."
+            </p>
+            <div class="pt-2 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-500 font-mono text-[11px]">
+              <span>Formula: ADP + Pi + H⁺ ⟶ ATP</span>
+              <button onclick="alert('Source Anchor: Biochemical Journal Bio-102')" class="text-sky-400 hover:underline">View Source Proof [↗]</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: Peer-Verified Bengali Translation Stream -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-400">
+            <span class="font-bold text-amber-400 font-bn text-sm">প্রমিত বাংলা রূপান্তর (PEER-VERIFIED)</span>
+            <span class="text-emerald-400">শুদ্ধতা নিশ্চিত</span>
+          </div>
+
+          <!-- Paragraph 1 BN -->
+          <div class="p-5 rounded-xl bg-slate-900/50 hover:bg-slate-900 border border-slate-800/80 transition-all space-y-3 group">
+            <div class="flex items-center justify-between text-xs font-mono text-slate-500">
+              <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300 font-bold">অনুচ্ছেদ ১.০১</span>
+              <span class="text-emerald-400 text-[10px]">বাংলা একাডেমি বৈজ্ঞানিক কোষ সমর্থিত</span>
+            </div>
+            <p class="text-base text-slate-200 leading-relaxed font-bn text-lg">
+              "সালোকসংশ্লেষণ সমগ্র জীবমণ্ডলের প্রাথমিক শক্তির প্রবেশদ্বার হিসেবে কাজ করে। ফটোসিস্টেম-২ এর অ্যান্টেনা কমপ্লেক্স দ্বারা শোষিত ফোটন কণা একটি দ্রুত চার্জ পৃথকীকরণ ঘটায়, যা পানির অণুকে বিশ্লিষ্ট করে আণবিক অক্সিজেন এবং উচ্চ-শক্তি প্রোটন তৈরি করে।"
+            </p>
+            <div class="pt-2 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-500 font-mono text-[11px]">
+              <span class="font-bn">মূল প্রক্রিয়া: চার্জ পৃথকীকরণ</span>
+              <span class="text-amber-400 font-mono text-[10px]">Reviewer: Dr. M. Karim (DU)</span>
+            </div>
+          </div>
+
+          <!-- Paragraph 2 BN -->
+          <div class="p-5 rounded-xl bg-slate-900/50 hover:bg-slate-900 border border-slate-800/80 transition-all space-y-3 group">
+            <div class="flex items-center justify-between text-xs font-mono text-slate-500">
+              <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300 font-bold">অনুচ্ছেদ ১.০২</span>
+              <span class="text-emerald-400 text-[10px]">পরিভাষা যাচাইকৃত</span>
+            </div>
+            <p class="text-base text-slate-200 leading-relaxed font-bn text-lg">
+              "মেমব্রেনজুড়ে সৃষ্ট এই প্রোটন গ্রেডিয়েন্ট এটিপি সিন্থেসের ঘূর্ণায়মান এনজাইম কাঠামোকে সচল করে, যার ফলে স্ট্রোমার ভেতরে অ্যাডিনোসিন ডাইফসফেট ও অজৈব ফসফেট থেকে জীবনধারণের জ্বালানি এটিপি (ATP) সংশ্লেষিত হয়।"
+            </p>
+            <div class="pt-2 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-500 font-mono text-[11px]">
+              <span class="font-bn">রাসায়নিক সূত্র: ADP + Pi ⟶ ATP</span>
+              <span class="text-amber-400 font-mono text-[10px]">Verified Translation</span>
+            </div>
+          </div>
+
+        </div>
+
       </div>
 
-    </section>
+    </main>
+  </section>
 
-    <!-- ASYMMETRIC BENTO / CONTENT SHOWCASE -->
-    <section id="articles" class="max-w-6xl mx-auto px-6 py-8">
-      
-      <!-- Section Header -->
-      <div class="flex items-center justify-between mb-8 pb-3 border-b border-subtle">
+
+  <!-- ========================================================================================= -->
+  <!-- DIRECTION 03: THE SPATIAL KNOWLEDGE CONSTELLATION (INTERACTIVE GRAPH & DOSSIER DRAWER)   -->
+  <!-- Architecture: Visual Node Canvas + Interactive Cross-Disciplinary Graph + Slide-Out Dossier -->
+  <!-- ========================================================================================= -->
+  <section id="view-dir-3" class="prototype-view hidden min-h-screen bg-[#080B11] text-slate-100 font-canvas-sans relative overflow-hidden">
+    
+    <!-- Constellation HUD Navigation -->
+    <header class="border-b border-white/10 bg-slate-950/80 backdrop-blur-md px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-20 text-xs">
+      <div class="flex items-center gap-3">
+        <div class="w-7 h-7 rounded-lg bg-indigo-600 text-white font-bold flex items-center justify-center font-canvas-display shadow-lg shadow-indigo-600/30">
+          K
+        </div>
         <div>
-          <h2 id="section-title" class="text-2xl font-bold tracking-tight">Verified Knowledge Entries</h2>
-          <p id="section-sub" class="text-xs text-[var(--muted)] mt-1">Peer-reviewed, source-anchored documentation in English & Bengali</p>
+          <span class="font-bold text-sm tracking-tight font-canvas-display">Knowra Constellation Graph</span>
+          <span class="text-[10px] text-slate-400 block -mt-0.5 font-mono">Interactive Multidisciplinary Knowledge Canvas</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4 text-xs font-mono">
+        <span class="text-slate-400 hidden sm:inline">Active Nodes: 1,420 • Clustered by Source Provenance</span>
+        <div class="flex items-center gap-1.5 bg-slate-900 border border-white/10 px-2.5 py-1 rounded-lg">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span>Filter: Peer-Reviewed Only</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Spatial Stage: Graph Canvas (Left/Center) + Knowledge Dossier Drawer (Right) -->
+    <div class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 min-h-[750px]">
+      
+      <!-- Interactive Graph Stage (8 Cols) -->
+      <div class="lg:col-span-8 rounded-3xl bg-slate-900/40 border border-white/10 p-6 relative overflow-hidden flex flex-col justify-between backdrop-blur-sm min-h-[550px]">
+        
+        <!-- Graph HUD Status -->
+        <div class="flex items-center justify-between text-xs font-mono text-slate-400 z-10">
+          <span class="bg-slate-950/80 px-2.5 py-1 rounded-md border border-white/5">CLUSTER: Biological Systems & Energetics</span>
+          <span class="text-indigo-400">Click any connected node to inspect verified facts</span>
+        </div>
+
+        <!-- Interactive Node Graph Simulation (SVG Vector Canvas) -->
+        <div class="my-auto relative h-[420px] flex items-center justify-center">
+          
+          <!-- SVG Connecting Laser Lines -->
+          <svg class="absolute inset-0 w-full h-full pointer-events-none stroke-indigo-500/30" stroke-width="1.5">
+            <line x1="50%" y1="50%" x2="22%" y2="28%" stroke-dasharray="4 4" />
+            <line x1="50%" y1="50%" x2="78%" y2="25%" stroke-dasharray="4 4" />
+            <line x1="50%" y1="50%" x2="20%" y2="75%" stroke-dasharray="4 4" />
+            <line x1="50%" y1="50%" x2="82%" y2="78%" stroke-dasharray="4 4" />
+          </svg>
+
+          <!-- Core Center Node -->
+          <div onclick="selectNode('photosynthesis')" class="absolute z-10 p-4 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-800 text-white shadow-2xl shadow-indigo-600/40 border border-indigo-400/30 cursor-pointer node-pulse text-center space-y-1 hover:scale-105 transition-transform">
+            <span class="text-[9px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded bg-black/40 text-indigo-200">CORE ENTITY</span>
+            <h3 class="text-base font-bold font-canvas-display">Photosynthesis</h3>
+            <p class="text-xs font-bn text-indigo-100">সালোকসংশ্লেষণ শক্তিচক্র</p>
+          </div>
+
+          <!-- Satellite Node 1: Thylakoid Membrane -->
+          <div onclick="selectNode('thylakoid')" class="absolute left-[8%] top-[18%] p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-white/10 hover:border-indigo-400 text-center cursor-pointer transition-all shadow-md group">
+            <span class="text-[9px] font-mono text-slate-400 block">ORGANELLE</span>
+            <p class="font-bold text-xs text-white group-hover:text-indigo-300">Thylakoid Membrane</p>
+            <p class="text-[11px] font-bn text-slate-400">থাইলাকয়েড পর্দা</p>
+          </div>
+
+          <!-- Satellite Node 2: Water Photolysis -->
+          <div onclick="selectNode('photolysis')" class="absolute right-[8%] top-[16%] p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-white/10 hover:border-sky-400 text-center cursor-pointer transition-all shadow-md group">
+            <span class="text-[9px] font-mono text-sky-400 block">REACTION</span>
+            <p class="font-bold text-xs text-white group-hover:text-sky-300">Water Photolysis (2H₂O)</p>
+            <p class="text-[11px] font-bn text-slate-400">পানির আলোক-বিশ্লেষণ</p>
+          </div>
+
+          <!-- Satellite Node 3: Calvin Cycle -->
+          <div onclick="selectNode('calvin')" class="absolute left-[6%] bottom-[16%] p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-white/10 hover:border-amber-400 text-center cursor-pointer transition-all shadow-md group">
+            <span class="text-[9px] font-mono text-amber-400 block">BIOCHEMISTRY</span>
+            <p class="font-bold text-xs text-white group-hover:text-amber-300">Calvin Cycle (C₃)</p>
+            <p class="text-[11px] font-bn text-slate-400">ক্যালভিন চক্র ও শর্করা</p>
+          </div>
+
+          <!-- Satellite Node 4: ATP Synthase Motor -->
+          <div onclick="selectNode('atp')" class="absolute right-[6%] bottom-[16%] p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-white/10 hover:border-emerald-400 text-center cursor-pointer transition-all shadow-md group">
+            <span class="text-[9px] font-mono text-emerald-400 block">MOLECULAR MOTOR</span>
+            <p class="font-bold text-xs text-white group-hover:text-emerald-300">ATP Synthase</p>
+            <p class="text-[11px] font-bn text-slate-400">এটিপি সিন্থেস এনজাইম</p>
+          </div>
+
+        </div>
+
+        <!-- Bottom Canvas Controls -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-white/5 text-xs text-slate-400 font-mono">
+          <span>Mode: Node Inspection</span>
+          <div class="flex items-center gap-2">
+            <button class="px-2 py-1 rounded bg-slate-900 border border-white/5 hover:bg-slate-800">Recenter Canvas</button>
+            <button class="px-2 py-1 rounded bg-slate-900 border border-white/5 hover:bg-slate-800">Cross-Disciplinary Zoom</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Live Slide-Out Node Dossier (Right 4 Cols) -->
+      <aside class="lg:col-span-4 rounded-3xl bg-slate-900/80 border border-white/10 p-6 space-y-6 flex flex-col justify-between">
+        
+        <div class="space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-white/10">
+            <span class="text-[10px] font-mono uppercase tracking-wider text-indigo-400 font-bold">NODE VERIFICATION DOSSIER</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Verified Sourced</span>
+          </div>
+
+          <div class="space-y-2">
+            <h2 id="node-dossier-title" class="text-2xl font-bold font-canvas-display text-white">
+              Photosynthesis Engine
+            </h2>
+            <p id="node-dossier-bn" class="text-sm font-bn text-indigo-300 font-semibold">
+              সালোকসংশ্লেষণ: সৌরশক্তি থেকে জীবরাসায়নিক জ্বালানি তৈরি
+            </p>
+          </div>
+
+          <p id="node-dossier-desc" class="text-xs text-slate-300 leading-relaxed font-sans">
+            Photochemical mechanism converting atmospheric carbon dioxide and water into oxygen and glucose via solar photon excitation in chloroplasts.
+          </p>
+
+          <!-- Verified Provenance Card -->
+          <div class="p-4 rounded-xl bg-slate-950/70 border border-white/5 space-y-2 text-xs font-mono">
+            <span class="text-[10px] text-slate-400 block">PRIMARY SOURCE ANCHOR</span>
+            <p id="node-dossier-source" class="font-bold text-slate-200">Nature Publishing Group (Deisenhofer et al.)</p>
+            <a href="https://www.nature.com/articles/nature08431" target="_blank" class="text-indigo-400 hover:underline block text-[11px]">https://doi.org/10.1038/nature08431 ↗</a>
+          </div>
+
+          <!-- Formula / Metric Box -->
+          <div class="p-3.5 rounded-xl bg-indigo-950/20 border border-indigo-500/20 font-workbench-mono text-xs text-indigo-200">
+            <span class="text-[9px] text-slate-400 block font-sans">CHEMICAL STOICHIOMETRY</span>
+            <p id="node-dossier-formula">6CO₂ + 6H₂O + hν ⟶ C₆H₁₂O₆ + 6O₂</p>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-white/5">
+          <button onclick="alert('Full monographic exploration opened for this node!')" class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-bold text-xs text-white transition-colors shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
+            <span>Read Full Peer-Reviewed Monograph</span>
+            <span>↗</span>
+          </button>
+        </div>
+
+      </aside>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================================================= -->
+  <!-- DIRECTION 04: SWISS INTERNATIONAL KNOWLEDGE GRID (RAW TYPOGRAPHIC MATRIX)                 -->
+  <!-- Architecture: 0px Radius Hairline Grid + Realtime Ticker + Tabular Knowledge Ledger       -->
+  <!-- ========================================================================================= -->
+  <section id="view-dir-4" class="prototype-view hidden min-h-screen bg-white text-black dark:bg-[#050505] dark:text-white font-sans transition-colors">
+    
+    <!-- Real-time Infrastructure Telemetry Ticker -->
+    <div class="border-b border-black dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900 px-6 py-2 text-[11px] font-workbench-mono flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center gap-4">
+        <span class="font-bold flex items-center gap-1.5 text-rose-600 dark:text-rose-400">
+          <span class="w-2 h-2 bg-rose-600 rounded-none inline-block"></span>
+          KNOWRA TELEMETRY MATRIX
+        </span>
+        <span>INDEXED ENTRIES: 8,492</span>
+        <span>VERIFIED PRIMARY SOURCES: 100%</span>
+        <span>BN TRANSLATION ACCURACY: 99.8%</span>
+      </div>
+      <div class="flex items-center gap-4 text-zinc-500">
+        <span>FTS ENGINE: POSTGRESQL TRIGRAM</span>
+        <span>LATENCY: 8MS</span>
+      </div>
+    </div>
+
+    <!-- Stark Swiss Header -->
+    <header class="border-b border-black dark:border-zinc-800 p-8 sm:p-12 grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
+      
+      <div class="md:col-span-8 space-y-4">
+        <div class="flex items-center gap-2 font-workbench-mono text-xs text-zinc-500 uppercase tracking-widest">
+          <span>CATALOGUE MATRIX NO. 2026</span>
+          <span>/</span>
+          <span class="text-rose-600 font-bold">OPEN SOURCE INFRASTRUCTURE</span>
+        </div>
+        <h1 class="font-swiss-title text-4xl sm:text-7xl font-black uppercase tracking-tighter leading-none">
+          Knowledge Without Boundaries.
+        </h1>
+        <p class="font-bn text-2xl sm:text-3xl text-zinc-600 dark:text-zinc-400 font-bold">
+          যাচাইকৃত উন্মুক্ত বিশ্বকোষ ও নির্ভরযোগ্য জ্ঞানভাণ্ডার
+        </p>
+      </div>
+
+      <div class="md:col-span-4 border-l border-black dark:border-zinc-800 pl-6 space-y-4 font-workbench-mono text-xs">
+        <p class="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+          Structured Swiss matrix designed for zero-latency retrieval. No decorative illustrations. Primary citations verified cryptographically.
+        </p>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-1 bg-black text-white dark:bg-white dark:text-black font-bold">APACHE 2.0</span>
+          <span class="px-2 py-1 border border-black dark:border-zinc-700">STRICT NO-AI HALLUCINATION</span>
+        </div>
+      </div>
+
+    </header>
+
+    <!-- The Tabular Knowledge Ledger (Zero Cards, Pure Structural Matrix) -->
+    <main class="p-8 sm:p-12 space-y-6">
+      
+      <div class="flex flex-wrap items-center justify-between gap-4 font-workbench-mono text-xs pb-4 border-b border-black dark:border-zinc-800">
+        <div class="flex items-center gap-3">
+          <span class="font-bold uppercase tracking-wider">INDEXED ENTRIES TABLE [2026]</span>
+          <span class="px-2 py-0.5 bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold border border-rose-500/20">4 ACTIVE IN VIEW</span>
         </div>
         <div class="flex items-center gap-2">
-          <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
-            100% Primary Sources
-          </span>
+          <input type="text" placeholder="Filter ledger..." class="px-3 py-1 border border-black dark:border-zinc-700 bg-transparent text-xs font-mono focus:outline-none focus:ring-1 focus:ring-rose-500">
         </div>
       </div>
 
-      <!-- ARTICLES GRID (ASYMMETRIC BENTO LAYOUT) -->
-      <div id="articles-container" class="grid grid-cols-1 md:grid-cols-12 gap-6">
+      <!-- Swiss Data Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left font-workbench-mono text-xs border border-black dark:border-zinc-800 divide-y divide-black dark:divide-zinc-800">
+          
+          <thead class="bg-zinc-100 dark:bg-zinc-900 text-black dark:text-white uppercase">
+            <tr class="divide-x divide-black dark:divide-zinc-800">
+              <th class="p-3 w-24">ID</th>
+              <th class="p-3 font-bold">CANONICAL TOPIC (EN & BN)</th>
+              <th class="p-3 w-40">PRIMARY DISCIPLINE</th>
+              <th class="p-3 w-56">ANCHORED SOURCE</th>
+              <th class="p-3 w-32">PEER REVIEW</th>
+              <th class="p-3 w-28 text-right">ACTION</th>
+            </tr>
+          </thead>
 
-        <!-- ARTICLE 1: PHOTOSYNTHESIS (FEATURED HERO CARD, 7 COLS) -->
-        <article class="article-card md:col-span-7 p-6 sm:p-8 rounded-2xl bg-[var(--surface)] border border-subtle flex flex-col justify-between hover:border-[var(--accent)] transition-all group shadow-sm" data-category="science" data-title="photosynthesis সালোকসংশ্লেষণ">
-          <div>
-            <!-- Category & Verification Status -->
-            <div class="flex items-center justify-between gap-2 mb-4 text-xs">
-              <span class="px-2.5 py-1 rounded-md bg-[var(--badge-bg)] text-[var(--badge-text)] font-semibold font-mono tracking-wider uppercase">
-                Science • বিজ্ঞান
-              </span>
-              <span class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="text-[11px] uppercase tracking-wider font-semibold">Reviewed & Verified</span>
-              </span>
-            </div>
+          <tbody class="divide-y divide-black dark:divide-zinc-800 font-sans">
+            
+            <!-- Row 1 -->
+            <tr class="divide-x divide-black dark:divide-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors">
+              <td class="p-3 font-workbench-mono text-zinc-500">#BIO-01</td>
+              <td class="p-3 space-y-0.5">
+                <span class="font-bold text-sm block font-swiss-title">Photosynthesis (সালোকসংশ্লেষণ)</span>
+                <span class="text-xs text-zinc-600 dark:text-zinc-400 block font-bn">আলোক-রাসায়নিক শক্তি রূপান্তর ও গ্লুকোজ সংশ্লেষণ প্রক্রিয়া</span>
+              </td>
+              <td class="p-3 font-workbench-mono text-xs">Bio-Energetics</td>
+              <td class="p-3 font-workbench-mono text-[11px] text-zinc-700 dark:text-zinc-300">
+                <span>Nature Pub. Group (10.1038)</span>
+                <span class="block text-[10px] text-zinc-500">Deisenhofer & Michel</span>
+              </td>
+              <td class="p-3 font-workbench-mono text-xs text-emerald-600 dark:text-emerald-400 font-bold">
+                VERIFIED (100%)
+              </td>
+              <td class="p-3 text-right font-workbench-mono">
+                <button onclick="alert('Viewing full dossier for Photosynthesis...')" class="px-2.5 py-1 bg-black text-white dark:bg-white dark:text-black font-bold text-[10px] hover:bg-rose-600 dark:hover:bg-rose-500 dark:hover:text-white transition-colors">
+                  READ [↗]
+                </button>
+              </td>
+            </tr>
 
-            <!-- Title -->
-            <h3 class="text-2xl sm:text-3xl font-bold mb-3 group-hover:text-[var(--accent)] transition-colors leading-tight" data-card="title-1">
-              Photosynthesis: The Biological Engine of Life
-            </h3>
+            <!-- Row 2 -->
+            <tr class="divide-x divide-black dark:divide-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors">
+              <td class="p-3 font-workbench-mono text-zinc-500">#ASTRO-02</td>
+              <td class="p-3 space-y-0.5">
+                <span class="font-bold text-sm block font-swiss-title">Solar System Dynamics (সৌরজগৎ)</span>
+                <span class="text-xs text-zinc-600 dark:text-zinc-400 block font-bn">মহাকর্ষীয় কক্ষপথীয় গতিবিজ্ঞান ও গ্রহমণ্ডলীর গঠন</span>
+              </td>
+              <td class="p-3 font-workbench-mono text-xs">Astrophysics</td>
+              <td class="p-3 font-workbench-mono text-[11px] text-zinc-700 dark:text-zinc-300">
+                <span>NASA Science Directorate</span>
+                <span class="block text-[10px] text-zinc-500">Planetary Ephemeris</span>
+              </td>
+              <td class="p-3 font-workbench-mono text-xs text-emerald-600 dark:text-emerald-400 font-bold">
+                VERIFIED (100%)
+              </td>
+              <td class="p-3 text-right font-workbench-mono">
+                <button onclick="alert('Viewing full dossier for Solar System...')" class="px-2.5 py-1 bg-black text-white dark:bg-white dark:text-black font-bold text-[10px] hover:bg-rose-600 dark:hover:bg-rose-500 dark:hover:text-white transition-colors">
+                  READ [↗]
+                </button>
+              </td>
+            </tr>
 
-            <!-- Summary -->
-            <p class="text-sm sm:text-base text-[var(--muted)] leading-relaxed mb-6" data-card="summary-1">
-              Photosynthesis is the photochemical process by which autotrophic green plants and algae convert solar light energy into stable biochemical energy in the form of glucose.
-            </p>
+            <!-- Row 3 -->
+            <tr class="divide-x divide-black dark:divide-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors">
+              <td class="p-3 font-workbench-mono text-zinc-500">#GEO-03</td>
+              <td class="p-3 space-y-0.5">
+                <span class="font-bold text-sm block font-swiss-title">Plate Tectonics of Bengal Basin (ভূ-গাঠনিক পাত)</span>
+                <span class="text-xs text-zinc-600 dark:text-zinc-400 block font-bn">ভারতীয় ও ইউরেশীয় পাতের পারস্পরিক সংঘর্ষ ও ভূমিকম্পের ঝুঁকি</span>
+              </td>
+              <td class="p-3 font-workbench-mono text-xs">Geophysics</td>
+              <td class="p-3 font-workbench-mono text-[11px] text-zinc-700 dark:text-zinc-300">
+                <span>USGS & GSB Dataset</span>
+                <span class="block text-[10px] text-zinc-500">Subduction Mechanics</span>
+              </td>
+              <td class="p-3 font-workbench-mono text-xs text-emerald-600 dark:text-emerald-400 font-bold">
+                VERIFIED (100%)
+              </td>
+              <td class="p-3 text-right font-workbench-mono">
+                <button onclick="alert('Viewing full dossier for Plate Tectonics...')" class="px-2.5 py-1 bg-black text-white dark:bg-white dark:text-black font-bold text-[10px] hover:bg-rose-600 dark:hover:bg-rose-500 dark:hover:text-white transition-colors">
+                  READ [↗]
+                </button>
+              </td>
+            </tr>
 
-            <!-- Mathematical / Chemical Formula Card -->
-            <div class="p-3.5 rounded-xl bg-[var(--bg)] border border-subtle font-mono text-xs sm:text-sm text-[var(--text)] mb-6 flex items-center justify-between">
-              <span>6CO₂ + 6H₂O + photons ➔ C₆H₁₂O₆ + 6O₂</span>
-              <span class="text-[10px] uppercase font-bold text-[var(--accent)]">Oxygenic Reaction</span>
-            </div>
-          </div>
+            <!-- Row 4 -->
+            <tr class="divide-x divide-black dark:divide-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors">
+              <td class="p-3 font-workbench-mono text-zinc-500">#BIO-04</td>
+              <td class="p-3 space-y-0.5">
+                <span class="font-bold text-sm block font-swiss-title">CRISPR-Cas9 Gene Editing (জিন সম্পাদনা)</span>
+                <span class="text-xs text-zinc-600 dark:text-zinc-400 block font-bn">আরএনএ-নির্দেশিত আণবিক কাঁচি ও লক্ষ্যভিত্তিক ডিএনএ পরিবর্তন</span>
+              </td>
+              <td class="p-3 font-workbench-mono text-xs">Genetics</td>
+              <td class="p-3 font-workbench-mono text-[11px] text-zinc-700 dark:text-zinc-300">
+                <span>Science Mag #6096</span>
+                <span class="block text-[10px] text-zinc-500">Doudna & Charpentier</span>
+              </td>
+              <td class="p-3 font-workbench-mono text-xs text-amber-600 dark:text-amber-400 font-bold">
+                PEER QUEUE (95%)
+              </td>
+              <td class="p-3 text-right font-workbench-mono">
+                <button onclick="alert('Viewing full dossier for CRISPR...')" class="px-2.5 py-1 bg-black text-white dark:bg-white dark:text-black font-bold text-[10px] hover:bg-rose-600 dark:hover:bg-rose-500 dark:hover:text-white transition-colors">
+                  READ [↗]
+                </button>
+              </td>
+            </tr>
 
-          <!-- Bottom Meta & Verified Source Trigger -->
-          <div class="pt-4 border-t border-subtle flex items-center justify-between text-xs text-[var(--muted)]">
-            <div class="flex items-center gap-3">
-              <button onclick="openSourceModal('nature')" class="flex items-center gap-1 text-[var(--accent)] hover:underline font-medium">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
-                <span>Primary Source: Nature 08431</span>
-              </button>
-              <span>•</span>
-              <span class="font-mono">Rev #1</span>
-            </div>
-            <span class="text-[11px] px-2 py-0.5 rounded bg-[var(--bg)] border border-subtle font-mono">EN | BN</span>
-          </div>
-        </article>
+          </tbody>
 
-        <!-- ARTICLE 2: SOLAR SYSTEM (5 COLS) -->
-        <article class="article-card md:col-span-5 p-6 rounded-2xl bg-[var(--surface)] border border-subtle flex flex-col justify-between hover:border-[var(--accent)] transition-all group shadow-sm" data-category="science" data-title="solar system সৌরজগৎ">
-          <div>
-            <div class="flex items-center justify-between gap-2 mb-4 text-xs">
-              <span class="px-2.5 py-1 rounded-md bg-[var(--badge-bg)] text-[var(--badge-text)] font-semibold font-mono tracking-wider uppercase">
-                Astronomy • জ্যোতির্বিজ্ঞান
-              </span>
-              <span class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="text-[11px] uppercase tracking-wider font-semibold">Reviewed</span>
-              </span>
-            </div>
-
-            <h3 class="text-xl sm:text-2xl font-bold mb-3 group-hover:text-[var(--accent)] transition-colors leading-snug" data-card="title-2">
-              Our Solar System: Planetary Dynamics
-            </h3>
-
-            <p class="text-sm text-[var(--muted)] leading-relaxed mb-6" data-card="summary-2">
-              The gravitationally bound planetary system of the Sun, comprising eight major planets, dwarf planets, and interplanetary debris originating 4.6 billion years ago.
-            </p>
-
-            <div class="grid grid-cols-2 gap-2 text-xs font-mono mb-4">
-              <div class="p-2.5 rounded-lg bg-[var(--bg)] border border-subtle">
-                <p class="text-[10px] text-[var(--muted)]">Primary Star</p>
-                <p class="font-bold text-[var(--text)]">The Sun (G2V)</p>
-              </div>
-              <div class="p-2.5 rounded-lg bg-[var(--bg)] border border-subtle">
-                <p class="text-[10px] text-[var(--muted)]">Planetary Count</p>
-                <p class="font-bold text-[var(--text)]">8 Major Planets</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="pt-4 border-t border-subtle flex items-center justify-between text-xs text-[var(--muted)]">
-            <button onclick="openSourceModal('nasa')" class="flex items-center gap-1 text-[var(--accent)] hover:underline font-medium">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
-              <span>Source: NASA Directorate</span>
-            </button>
-            <span class="text-[11px] px-2 py-0.5 rounded bg-[var(--bg)] border border-subtle font-mono">EN | BN</span>
-          </div>
-        </article>
-
-        <!-- ARTICLE 3: QUANTUM COMPUTING (6 COLS) -->
-        <article class="article-card md:col-span-6 p-6 rounded-2xl bg-[var(--surface)] border border-subtle flex flex-col justify-between hover:border-[var(--accent)] transition-all group shadow-sm" data-category="technology" data-title="quantum computing কোয়ান্টাম কম্পিউটিং">
-          <div>
-            <div class="flex items-center justify-between gap-2 mb-4 text-xs">
-              <span class="px-2.5 py-1 rounded-md bg-[var(--badge-bg)] text-[var(--badge-text)] font-semibold font-mono tracking-wider uppercase">
-                Technology • প্রযুক্তি
-              </span>
-              <span class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="text-[11px] uppercase tracking-wider font-semibold">Reviewed</span>
-              </span>
-            </div>
-
-            <h3 class="text-xl font-bold mb-3 group-hover:text-[var(--accent)] transition-colors leading-snug" data-card="title-3">
-              Quantum Computing Fundamentals
-            </h3>
-
-            <p class="text-sm text-[var(--muted)] leading-relaxed mb-4" data-card="summary-3">
-              Harnessing quantum mechanical phenomena such as superposition and entanglement to solve computational problems intractable on classical Turing architectures.
-            </p>
-          </div>
-
-          <div class="pt-4 border-t border-subtle flex items-center justify-between text-xs text-[var(--muted)]">
-            <span class="flex items-center gap-1 font-medium text-[var(--accent)]">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-              IEEE Quantum / MIT
-            </span>
-            <span class="font-mono text-[11px]">Rev #2</span>
-          </div>
-        </article>
-
-        <!-- ARTICLE 4: BENGALI LANGUAGE MOVEMENT (6 COLS) -->
-        <article class="article-card md:col-span-6 p-6 rounded-2xl bg-[var(--surface)] border border-subtle flex flex-col justify-between hover:border-[var(--accent)] transition-all group shadow-sm" data-category="history" data-title="bengali language movement ভাষা আন্দোলন">
-          <div>
-            <div class="flex items-center justify-between gap-2 mb-4 text-xs">
-              <span class="px-2.5 py-1 rounded-md bg-[var(--badge-bg)] text-[var(--badge-text)] font-semibold font-mono tracking-wider uppercase">
-                History • ইতিহাস
-              </span>
-              <span class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="text-[11px] uppercase tracking-wider font-semibold">Reviewed</span>
-              </span>
-            </div>
-
-            <h3 class="text-xl font-bold mb-3 group-hover:text-[var(--accent)] transition-colors leading-snug" data-card="title-4">
-              The Language Movement of 1952
-            </h3>
-
-            <p class="text-sm text-[var(--muted)] leading-relaxed mb-4" data-card="summary-4">
-              The historic socio-political advocacy in East Bengal demanding Bengali as an official state language, laying the foundation for UNESCO International Mother Language Day.
-            </p>
-          </div>
-
-          <div class="pt-4 border-t border-subtle flex items-center justify-between text-xs text-[var(--muted)]">
-            <span class="flex items-center gap-1 font-medium text-[var(--accent)]">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-              UNESCO Records / Asiatic Society
-            </span>
-            <span class="font-mono text-[11px]">Rev #1</span>
-          </div>
-        </article>
-
+        </table>
       </div>
-    </section>
 
-    <!-- COMMUNITY & GOVERNANCE PILLARS -->
-    <section class="max-w-6xl mx-auto px-6 py-12 border-t border-subtle">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="p-6 rounded-2xl bg-[var(--surface)] border border-subtle">
-          <div class="w-10 h-10 rounded-xl bg-[var(--badge-bg)] text-[var(--accent)] flex items-center justify-center mb-4">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-          </div>
-          <h4 class="font-bold text-base mb-2">Zero AI Hallucination</h4>
-          <p class="text-sm text-[var(--muted)] leading-relaxed">
-            AI is decoupled and assists only in summarization or drafts. No automated publishing; all knowledge undergoes editorial human review.
-          </p>
-        </div>
+    </main>
 
-        <div class="p-6 rounded-2xl bg-[var(--surface)] border border-subtle">
-          <div class="w-10 h-10 rounded-xl bg-[var(--badge-bg)] text-[var(--accent)] flex items-center justify-center mb-4">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
-          </div>
-          <h4 class="font-bold text-base mb-2">Apache 2.0 Open Infrastructure</h4>
-          <p class="text-sm text-[var(--muted)] leading-relaxed">
-            Developer APIs, full schema transparency, community contributions, and portable data export for educators and universities.
-          </p>
-        </div>
+  </section>
 
-        <div class="p-6 rounded-2xl bg-[var(--surface)] border border-subtle">
-          <div class="w-10 h-10 rounded-xl bg-[var(--badge-bg)] text-[var(--accent)] flex items-center justify-center mb-4">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg>
-          </div>
-          <h4 class="font-bold text-base mb-2">Dedicated Bengali Trigram FTS</h4>
-          <p class="text-sm text-[var(--muted)] leading-relaxed">
-            Independent language-aware search that preserves Bengali Unicode characters, compound verbs, and inflections without corrupted English stemmers.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="border-t border-subtle py-12 text-center text-xs text-[var(--muted)]">
-      <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p>Knowra — Open Source Multilingual Knowledge Infrastructure. Licensed under Apache 2.0.</p>
-        <div class="flex items-center gap-4">
-          <a href="https://github.com/nahid-emdad/knowra" target="_blank" class="hover:underline">Repository</a>
-          <span>•</span>
-          <a href="https://github.com/nahid-emdad/knowra/blob/main/docs/ARCHITECTURE.md" target="_blank" class="hover:underline">Architecture</a>
-          <span>•</span>
-          <a href="https://github.com/nahid-emdad/knowra/blob/main/docs/BANGLA_SEARCH.md" target="_blank" class="hover:underline">Bangla Search Strategy</a>
-        </div>
-      </div>
-    </footer>
-
-  </div>
 
   <!-- ========================================================================= -->
-  <!-- SOURCE VERIFICATION MODAL / DRAWER -->
-  <!-- ========================================================================= -->
-  <div id="source-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-zinc-950 border border-white/10 rounded-2xl max-w-lg w-full p-6 text-zinc-100 shadow-2xl relative">
-      <button onclick="closeSourceModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-zinc-100 p-1">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-      </button>
-
-      <div class="flex items-center gap-2 mb-3 text-xs text-emerald-400 font-mono">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-        VERIFIED PRIMARY SOURCE RECORD
-      </div>
-
-      <h3 id="modal-title" class="text-xl font-bold mb-2">Source Title</h3>
-      <p id="modal-desc" class="text-sm text-zinc-400 mb-4 leading-relaxed">Source description and publishing details.</p>
-
-      <div class="p-3 rounded-lg bg-zinc-900 border border-white/5 space-y-2 text-xs font-mono mb-6">
-        <div class="flex justify-between">
-          <span class="text-zinc-500">Publisher:</span>
-          <span id="modal-publisher" class="text-zinc-300">Nature Publishing</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-zinc-500">Source Type:</span>
-          <span id="modal-type" class="text-amber-400">RESEARCH_PAPER</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-zinc-500">License:</span>
-          <span id="modal-license" class="text-zinc-300">Open Access / Academic</span>
-        </div>
-      </div>
-
-      <a id="modal-url" href="#" target="_blank" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-zinc-950 font-semibold text-sm transition-all">
-        <span>Inspect Source Repository</span>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-      </a>
-    </div>
-  </div>
-
-  <!-- ========================================================================= -->
-  <!-- JAVASCRIPT: DYNAMIC REAL-TIME SWITCHER & MULTILINGUAL TOGGLE -->
+  <!-- JAVASCRIPT: MULTI-DOM CONTROLLER (SWITCHES INDEPENDENT CONTAINERS)       -->
   <!-- ========================================================================= -->
   <script>
-    let currentOption = 1;
-    let isBengali = false;
-    let isDark = false;
+    let activeOption = 3;
+    let isDark = true;
+    let isBangla = false;
 
-    // Content Dictionaries (English & Bengali)
-    const i18nData = {
-      en: {
-        heroTitle: "Knowledge Without Boundaries.",
-        heroSub: "Discover, understand, and share reliable knowledge in your language. Every published entry is anchored to primary, verified sources.",
-        searchPlaceholder: "Search verified knowledge (e.g. 'Photosynthesis', 'Solar', 'Quantum')...",
-        sectionTitle: "Verified Knowledge Entries",
-        sectionSub: "Peer-reviewed, source-anchored documentation in English & Bengali",
-        card1Title: "Photosynthesis: The Biological Engine of Life",
-        card1Summary: "Photosynthesis is the photochemical process by which autotrophic green plants and algae convert solar light energy into stable biochemical energy in the form of glucose.",
-        card2Title: "Our Solar System: Planetary Dynamics",
-        card2Summary: "The gravitationally bound planetary system of the Sun, comprising eight major planets, dwarf planets, and interplanetary debris originating 4.6 billion years ago.",
-        card3Title: "Quantum Computing Fundamentals",
-        card3Summary: "Harnessing quantum mechanical phenomena such as superposition and entanglement to solve computational problems intractable on classical Turing architectures.",
-        card4Title: "The Language Movement of 1952",
-        card4Summary: "The historic socio-political advocacy in East Bengal demanding Bengali as an official state language, laying the foundation for UNESCO International Mother Language Day."
-      },
-      bn: {
-        heroTitle: "সীমানাহীন জ্ঞানভাণ্ডার।",
-        heroSub: "আপনার মাতৃভাষায় নির্ভরযোগ্য জ্ঞান জানুন, বুঝুন ও ভাগ করে নিন। প্রতিটি তথ্য শতভাগ প্রামাণ্য ও যাচাইকৃত সোর্সের সাথে যুক্ত।",
-        searchPlaceholder: "যাচাইকৃত জ্ঞান খুঁজুন (যেমন: 'সালোকসংশ্লেষণ', 'সৌরজগৎ', 'কোয়ান্টাম')...",
-        sectionTitle: "যাচাইকৃত ও প্রকাশিত জ্ঞান এন্ট্রি",
-        sectionSub: "ইংরেজি ও বাংলায় বিশেষজ্ঞদের দ্বারা নিরীক্ষিত তথ্য ও উৎস রেফারেন্স",
-        card1Title: "সালোকসংশ্লেষণ: পৃথিবীর প্রাণধারণের মূল জৈবরাসায়নিক প্রক্রিয়া",
-        card1Summary: "সালোকসংশ্লেষণ হলো একটি জৈবরাসায়নিক প্রক্রিয়া যার মাধ্যমে সবুজ উদ্ভিদ সূর্যালোকের শক্তিকে ব্যবহার করে পানি ও কার্বন ডাই-অক্সাইড থেকে গ্লুকোজ ও অক্সিজেন তৈরি করে।",
-        card2Title: "আমাদের সৌরজগৎ: গঠন ও গ্রহমণ্ডলী",
-        card2Summary: "সূর্য ও একে কেন্দ্র করে আবর্তিত আটটি প্রধান গ্রহ, বামন গ্রহ ও কোটি কোটি গ্রহাণু নিয়ে গঠিত আমাদের এই মহাজাগতিক পরিবার।",
-        card3Title: "কোয়ান্টাম কম্পিউটিং-এর মূল ভিত্তি",
-        card3Summary: "সুপারপজিশন ও এন্ট্যাঙ্গলমেন্টের মতো কোয়ান্টাম বলবিদ্যার নীতিগুলোকে কাজে লাগিয়ে ক্লাসিক্যাল কম্পিউটারের চেয়ে হাজার গুণ দ্রুত তথ্য প্রক্রিয়াকরণ।",
-        card4Title: "১৯৫২ সালের মহান ভাষা আন্দোলন",
-        card4Summary: "রাষ্ট্রভাষা হিসেবে বাংলার মর্যাদার দাবিতে ঐতিহাসিক আত্মত্যাগ, যার স্মরণে পরবর্তীতে ইউনেস্কো কর্তৃক ২১শে ফেব্রুয়ারিকে আন্তর্জাতিক মাতৃভাষা দিবস ঘোষণা করা হয়।"
-      }
+    // Direction Metadata
+    const directionsMeta = {
+      1: "01. Editorial Ledger: Asymmetric Split & Margin Citations",
+      2: "02. Dual-Stream Reader: Synchronized Comparative Bilingual Workspace",
+      3: "03. Knowledge Constellation: Spatial Interactive Graph & Node Dossier",
+      4: "04. Swiss Grid Matrix: Stark Typographic Ledger & Telemetry Ticker"
     };
 
-    // Option Configurations
-    const optionConfigs = {
-      1: {
-        className: 'opt-scholarly',
-        tag: 'Option 1: Scholarly Lexicon',
-        desc: 'Scholarly Editorial: Academic serif typography, warm archival tone, margin citations, and deep research focus.',
-        fontHeading: 'font-editorialSerif',
-        fontBody: 'font-editorialBody',
-        radius: 'rounded-2xl',
-        accentColor: '#B45309'
-      },
-      2: {
-        className: 'opt-workbench',
-        tag: 'Option 2: Tech Workbench',
-        desc: 'High-Density Technical Workbench: Obsidian dark theme, Space Grotesk + Mono, live source verification checklist & command palette.',
-        fontHeading: 'font-techSans',
-        fontBody: 'font-techMono',
-        radius: 'rounded-xl',
-        accentColor: '#10B981'
-      },
-      3: {
-        className: 'opt-universal',
-        tag: 'Option 3: Universal Primer',
-        desc: 'Universal Accessible Primer: Plus Jakarta Sans, high-contrast readable cards, welcoming student-friendly asymmetric bento.',
-        fontHeading: 'font-universalSans',
-        fontBody: 'font-universalSans',
-        radius: 'rounded-2xl',
-        accentColor: '#2563EB'
-      },
-      4: {
-        className: 'opt-swiss',
-        tag: 'Option 4: Swiss Minimalist',
-        desc: 'Swiss Minimalist Archive: Stark International Typographic Style, hairline subtle borders, bold Syne geometry, zero decorative fluff.',
-        fontHeading: 'font-swissSans',
-        fontBody: 'font-universalSans',
-        radius: 'rounded-none',
-        accentColor: '#E11D48'
+    function activateView(optionNum) {
+      activeOption = optionNum;
+
+      // 1. Hide all 4 view containers completely from DOM display
+      document.querySelectorAll('.prototype-view').forEach(view => {
+        view.classList.add('hidden');
+      });
+
+      // 2. Reveal ONLY the selected independent view container
+      const targetView = document.getElementById(`view-dir-${optionNum}`);
+      if (targetView) {
+        targetView.classList.remove('hidden');
       }
-    };
 
-    function switchOption(optNum) {
-      currentOption = optNum;
-      const viewport = document.getElementById('prototype-viewport');
-      const cfg = optionConfigs[optNum];
-
-      // Update active tabs
+      // 3. Update switcher tab button styles
       for (let i = 1; i <= 4; i++) {
-        const tab = document.getElementById(`tab-${i}`);
-        if (i === optNum) {
-          tab.className = "px-3 py-1.5 rounded-lg font-medium transition-all duration-200 bg-amber-500 text-zinc-950 font-semibold shadow-sm flex items-center gap-1.5";
+        const btn = document.getElementById(`btn-view-${i}`);
+        if (i === optionNum) {
+          btn.className = "px-3 py-1.5 rounded-lg font-medium transition-all duration-200 bg-amber-500 text-zinc-950 font-semibold shadow-sm flex items-center gap-1.5";
         } else {
-          tab.className = "px-3 py-1.5 rounded-lg font-medium transition-all duration-200 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 flex items-center gap-1.5";
+          btn.className = "px-3 py-1.5 rounded-lg font-medium transition-all duration-200 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 flex items-center gap-1.5";
         }
       }
 
-      // Remove existing option classes
-      viewport.classList.remove('opt-scholarly', 'opt-workbench', 'opt-universal', 'opt-swiss');
-      viewport.classList.add(cfg.className);
+      // 4. Update status line in switcher bar
+      document.getElementById('active-direction-meta').textContent = directionsMeta[optionNum];
 
-      // Update Typography classes
-      const heroTitle = document.getElementById('hero-title');
-      heroTitle.className = `text-4xl sm:text-6xl font-bold tracking-tight mb-4 text-[var(--text)] ${isBengali ? 'font-bengali' : cfg.fontHeading}`;
-
-      const heroSub = document.getElementById('hero-sub');
-      heroSub.className = `text-lg sm:text-xl text-[var(--muted)] max-w-2xl mx-auto mb-10 leading-relaxed ${isBengali ? 'font-bengali' : cfg.fontBody}`;
-
-      // Update Labels
-      document.getElementById('concept-tag').textContent = cfg.tag;
-      document.getElementById('concept-desc').textContent = cfg.desc;
-
-      // Card border-radius updates
-      const cards = document.querySelectorAll('.article-card');
-      cards.forEach(c => {
-        c.classList.remove('rounded-2xl', 'rounded-xl', 'rounded-none');
-        c.classList.add(cfg.radius);
-      });
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function toggleLanguage() {
-      isBengali = !isBengali;
-      const lang = isBengali ? 'bn' : 'en';
-      const data = i18nData[lang];
-
-      document.getElementById('lang-label').textContent = isBengali ? 'English (EN)' : 'বাংলা (BN)';
-      document.getElementById('hero-title').textContent = data.heroTitle;
-      document.getElementById('hero-sub').textContent = data.heroSub;
-      document.getElementById('live-search-input').placeholder = data.searchPlaceholder;
-      document.getElementById('section-title').textContent = data.sectionTitle;
-      document.getElementById('section-sub').textContent = data.sectionSub;
-
-      document.querySelector('[data-card="title-1"]').textContent = data.card1Title;
-      document.querySelector('[data-card="summary-1"]').textContent = data.card1Summary;
-      document.querySelector('[data-card="title-2"]').textContent = data.card2Title;
-      document.querySelector('[data-card="summary-2"]').textContent = data.card2Summary;
-      document.querySelector('[data-card="title-3"]').textContent = data.card3Title;
-      document.querySelector('[data-card="summary-3"]').textContent = data.card3Summary;
-      document.querySelector('[data-card="title-4"]').textContent = data.card4Title;
-      document.querySelector('[data-card="summary-4"]').textContent = data.card4Summary;
-
-      // Update font based on language
-      const cfg = optionConfigs[currentOption];
-      document.getElementById('hero-title').className = `text-4xl sm:text-6xl font-bold tracking-tight mb-4 text-[var(--text)] ${isBengali ? 'font-bengali' : cfg.fontHeading}`;
-    }
-
-    function toggleDarkMode() {
+    function toggleGlobalTheme() {
       isDark = !isDark;
       document.documentElement.classList.toggle('dark', isDark);
     }
 
-    function filterCategory(cat) {
-      const pills = document.querySelectorAll('.cat-pill');
-      pills.forEach(p => {
-        p.classList.remove('bg-[var(--accent)]', 'text-white');
-        p.classList.add('bg-[var(--surface)]', 'text-[var(--muted)]');
-      });
-      event.target.classList.add('bg-[var(--accent)]', 'text-white');
-      event.target.classList.remove('bg-[var(--surface)]', 'text-[var(--muted)]');
-
-      const cards = document.querySelectorAll('.article-card');
-      cards.forEach(c => {
-        if (cat === 'all' || c.getAttribute('data-category') === cat) {
-          c.style.display = 'flex';
-        } else {
-          c.style.display = 'none';
-        }
-      });
+    function toggleGlobalLang() {
+      isBangla = !isBangla;
+      document.getElementById('lang-btn-text').textContent = isBangla ? 'English (EN)' : 'বাংলা (BN)';
+      alert(isBangla ? 'Language shifted to Bengali (বাংলা প্রমিত রূপান্তর সক্রিয়)' : 'Language shifted to English canonical');
     }
 
-    function handleSearch(query) {
-      const q = query.trim().toLowerCase();
-      const cards = document.querySelectorAll('.article-card');
-      cards.forEach(c => {
-        const titleAndBody = c.getAttribute('data-title').toLowerCase() + ' ' + c.innerText.toLowerCase();
-        if (!q || titleAndBody.includes(q)) {
-          c.style.display = 'flex';
-        } else {
-          c.style.display = 'none';
-        }
-      });
-    }
-
-    function openSourceModal(srcType) {
-      const modal = document.getElementById('source-modal');
-      const title = document.getElementById('modal-title');
-      const desc = document.getElementById('modal-desc');
-      const pub = document.getElementById('modal-publisher');
-      const type = document.getElementById('modal-type');
-      const url = document.getElementById('modal-url');
-
-      if (srcType === 'nature') {
-        title.textContent = 'Structure and mechanism of photosynthetic reaction centers';
-        desc.textContent = 'Seminal peer-reviewed crystallography reference demonstrating photosynthetic charge separation.';
-        pub.textContent = 'Nature Publishing Group (Deisenhofer & Michel)';
-        type.textContent = 'RESEARCH_PAPER';
-        url.href = 'https://www.nature.com/articles/nature08431';
-      } else if (srcType === 'nasa') {
-        title.textContent = 'Our Solar System: Comprehensive Planetary Overview';
-        desc.textContent = 'Authoritative mission data covering orbital mechanics, mass ratios, and solar boundaries.';
-        pub.textContent = 'NASA Science Mission Directorate';
-        type.textContent = 'GOVERNMENT / OFFICIAL';
-        url.href = 'https://science.nasa.gov/solar-system/';
+    // Node selection logic for Direction 3 (Graph Constellation)
+    const nodeData = {
+      photosynthesis: {
+        title: "Photosynthesis Engine",
+        bn: "সালোকসংশ্লেষণ: সৌরশক্তি থেকে জীবরাসায়নিক জ্বালানি তৈরি",
+        desc: "Photochemical mechanism converting atmospheric carbon dioxide and water into oxygen and glucose via solar photon excitation in chloroplasts.",
+        source: "Nature Publishing Group (Deisenhofer et al.)",
+        formula: "6CO₂ + 6H₂O + hν ⟶ C₆H₁₂O₆ + 6O₂"
+      },
+      thylakoid: {
+        title: "Thylakoid Membrane Complex",
+        bn: "থাইলাকয়েড পর্দা: আলোক প্রতিক্রিয়ার আণবিক ভিত্তি",
+        desc: "Membrane-bound internal compartments of chloroplasts that house the Photosystem I & II reaction centers and electron transport chains.",
+        source: "Biochemical Society Journal (Crystallography Proof)",
+        formula: "Membrane Potential: ΔpH ≈ 3.0 across lumen"
+      },
+      photolysis: {
+        title: "Water Photolysis (Oxygen Evolution)",
+        bn: "পানির সালোক-বিশ্লেষণ ও আণবিক অক্সিজেন নিঃসরণ",
+        desc: "Catalyzed by the Oxygen-Evolving Complex (OEC) containing a Mn₄CaO₅ cluster, splitting 2H₂O into 4H⁺, 4e⁻ and molecular O₂.",
+        source: "Science Magazine Ref #4928 (Kok Cycle Mechanism)",
+        formula: "2H₂O ⟶ O₂ + 4H⁺ + 4e⁻"
+      },
+      calvin: {
+        title: "Calvin-Benson-Bassham Cycle",
+        bn: "ক্যালভিন চক্র: অন্ধকার পর্যায়ে কার্বন সংবন্ধন ও শর্করা প্রস্তুতি",
+        desc: "Enzymatic fixation of inorganic CO₂ into 3-phosphoglycerate catalyzed by RuBisCO in the chloroplast stroma, generating triose phosphates.",
+        source: "Nobel Prize in Chemistry (Melvin Calvin Archive)",
+        formula: "3 CO₂ + 9 ATP + 6 NADPH ⟶ GAP + 9 ADP + 6 NADP⁺"
+      },
+      atp: {
+        title: "ATP Synthase Rotary Motor",
+        bn: "এটিপি সিন্থেস: জৈব-বৈদ্যুতিক ঘূর্ণন ইঞ্জিন",
+        desc: "Rotary molecular motor driven by proton-motive force across the thylakoid membrane, synthesizing ATP from ADP and inorganic phosphate.",
+        source: "Cell Press / PNAS Biophysics Structure 2018",
+        formula: "ADP + Pi + 3H⁺_lumen ⟶ ATP + H₂O + 3H⁺_stroma"
       }
+    };
 
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
+    function selectNode(nodeKey) {
+      const data = nodeData[nodeKey];
+      if (!data) return;
+
+      document.getElementById('node-dossier-title').textContent = data.title;
+      document.getElementById('node-dossier-bn').textContent = data.bn;
+      document.getElementById('node-dossier-desc').textContent = data.desc;
+      document.getElementById('node-dossier-source').textContent = data.source;
+      document.getElementById('node-dossier-formula').textContent = data.formula;
     }
 
-    function closeSourceModal() {
-      const modal = document.getElementById('source-modal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
-
-    // Keyboard shortcut (⌘K or Ctrl+K to focus search)
-    window.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        document.getElementById('live-search-input').focus();
-      }
-    });
+    // Default: activate Spatial Knowledge Constellation (Direction 3) on startup
+    document.documentElement.classList.add('dark');
+    activateView(3);
   </script>
 
 </body>

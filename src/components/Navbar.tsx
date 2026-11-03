@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Search, Moon, Sun, Globe, PlusCircle, Menu, X, ExternalLink } from 'lucide-react';
+import { BookOpen, Search, Moon, Sun, Globe, PlusCircle, Menu, X, ExternalLink, Atom } from 'lucide-react';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -72,6 +72,18 @@ export default function Navbar() {
           >
             <Search className="w-4 h-4 text-accent" />
             <span>Search</span>
+          </Link>
+          <Link
+            href="/constellation"
+            className={`flex items-center gap-1.5 hover:text-foreground transition-colors ${
+              pathname === '/constellation' ? 'text-foreground font-semibold text-accent' : ''
+            }`}
+          >
+            <Atom className="w-4 h-4 text-indigo-500 animate-[spin_12s_linear_infinite]" />
+            <span className="flex items-center gap-1">
+              Constellation
+              <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-indigo-500/10 text-indigo-500 font-bold border border-indigo-500/20">3D</span>
+            </span>
           </Link>
           <Link
             href="/categories/science"
@@ -146,6 +158,14 @@ export default function Navbar() {
           >
             <Search className="w-4 h-4 text-accent" />
             <span>Search Knowledge</span>
+          </Link>
+          <Link
+            href="/constellation"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-2 py-1 text-foreground"
+          >
+            <Atom className="w-4 h-4 text-indigo-500" />
+            <span>Spatial Constellation (Graph)</span>
           </Link>
           <Link
             href="/categories/science"
