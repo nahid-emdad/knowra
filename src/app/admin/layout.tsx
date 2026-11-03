@@ -27,21 +27,29 @@ export default function AdminLayout({
   const pathname = usePathname();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [role, setRole] = useState<'ADMIN' | 'EDITOR'>('ADMIN');
+  const [user, setUser] = useState<{ name: string; email: string; role: 'ADMIN' | 'EDITOR' } | null>(null);
 
   useEffect(() => {
-    // Check if session cookie exists
-    const hasSession = document.cookie.includes('knowra_session');
-    if (!hasSession && pathname !== '/admin/login') {
-      // Redirect to login if unauthenticated
-      router.push('/admin/login');
-    }
+    // Only check if we are on an admin page other than login
+    if (pathname === '/admin/login') return;
 
-    if (document.cookie.includes('editor_session')) {
-      setRole('EDITOR');
-    } else {
-      setRole('ADMIN');
-    }
+    fetch('/api/v1/auth/me')
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Not authenticated');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (data.success && data.data?.user) {
+          setUser(data.data.user);
+        } else {
+          router.push('/admin/login');
+        }
+      })
+      .catch(() => {
+        router.push('/admin/login');
+      });
   }, [pathname, router]);
 
   // Don't render sidebar layout on login page
@@ -49,9 +57,14 @@ export default function AdminLayout({
     return <>{children}</>;
   }
 
-  const handleLogout = () => {
-    document.cookie = 'knowra_session=; path=/; max-age=0';
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/v1/auth/logout', { method: 'POST' });
+    } catch {
+      // Continue to redirect even on network error
+    }
     router.push('/admin/login');
+    router.refresh();
   };
 
   const navLinks = [
@@ -103,9 +116,16 @@ export default function AdminLayout({
               </div>
             </Link>
 
-            <div className="mt-3 inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              <span>Role: {role}</span>
+            <div className="mt-3 flex flex-col gap-1">
+              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 self-start">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span>Role: {user?.role || 'AUTHENTICATING...'}</span>
+              </div>
+              {user && (
+                <span className="text-[10px] text-muted-foreground truncate" title={user.email}>
+                  {user.name}
+                </span>
+              )}
             </div>
           </div>
 

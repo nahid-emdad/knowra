@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Role } from '@prisma/client';
+import { verifySessionToken, SESSION_COOKIE_NAME } from './session';
 
 export interface AuthSession {
   userId: string;
@@ -9,56 +10,40 @@ export interface AuthSession {
   expiresAt: Date;
 }
 
-// Built-in Demo Credentials for initial MVP development
-export const DEMO_ADMIN: AuthSession = {
-  userId: 'usr_admin',
-  name: 'Knowra Editorial Board',
-  email: 'admin@knowra.org',
-  role: Role.ADMIN,
-  expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-};
-
-export const DEMO_EDITOR: AuthSession = {
-  userId: 'usr_editor',
-  name: 'Bilingual Reviewer',
-  email: 'editor@knowra.org',
-  role: Role.EDITOR,
-  expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-};
-
-const SESSION_COOKIE_NAME = 'knowra_session';
-
 /**
- * Extracts and verifies server-side session from request cookies or headers.
+ * Extracts and cryptographically verifies server-side session from request cookies or headers.
  * PRD Section 4.5 & 11: Admin operations must be protected server-side.
+ * Strictly verifies HMAC-SHA256 signature and expiration timestamp.
  */
 export function getAuthenticatedSession(request: NextRequest): AuthSession | null {
+  let token: string | undefined;
+
   // 1. Check Authorization Bearer header
   const authHeader = request.headers.get('Authorization');
   if (authHeader && authHeader.startsWith('Bearer ')) {
-    const token = authHeader.replace('Bearer ', '').trim();
-    if (token === 'admin_token' || token === 'demo_admin_secret') {
-      return DEMO_ADMIN;
-    }
-    if (token === 'editor_token' || token === 'demo_editor_secret') {
-      return DEMO_EDITOR;
-    }
+    token = authHeader.replace('Bearer ', '').trim();
   }
 
-  // 2. Check knowra_session cookie
-  const cookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
-  if (cookie) {
-    if (cookie === 'admin_session') return DEMO_ADMIN;
-    if (cookie === 'editor_session') return DEMO_EDITOR;
+  // 2. Check knowra_session cookie if no header token
+  if (!token) {
+    token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
   }
 
-  // 3. Check development admin secret header
-  const adminSecret = request.headers.get('x-admin-key');
-  if (adminSecret && adminSecret === process.env.ADMIN_SECRET) {
-    return DEMO_ADMIN;
+  if (!token) return null;
+
+  // Verify cryptographic signature and expiration
+  const verified = verifySessionToken(token);
+  if (!verified) {
+    return null;
   }
 
-  return null;
+  return {
+    userId: verified.userId,
+    name: verified.name,
+    email: verified.email,
+    role: verified.role,
+    expiresAt: new Date(verified.exp * 1000),
+  };
 }
 
 /**
@@ -78,7 +63,7 @@ export function requireRole(
           success: false,
           error: {
             code: 'UNAUTHORIZED',
-            message: 'Authentication required. Server-side session verification failed.',
+            message: 'Authentication required. Server-side session verification failed or token is invalid.',
           },
         },
         { status: 401 }
@@ -110,3 +95,7 @@ export function requireRole(
 
   return { session };
 }
+
+export * from './password';
+export * from './session';
+export * from './users';

@@ -3,8 +3,9 @@ import { NextRequest } from 'next/server';
 import { middleware } from '@/middleware';
 import { GET as getHealth } from '@/app/api/health/route';
 import { INITIAL_KNOWLEDGE_ITEMS } from '@/lib/data/initial-data';
-import { VerificationStatus } from '@prisma/client';
+import { VerificationStatus, Role } from '@prisma/client';
 import { SearchService } from '@/lib/services/search';
+import { signSessionToken } from '@/lib/auth/session';
 
 describe('Task 8: Production Hardening, Security & Final Verification (PRD 11, 12, 13)', () => {
   describe('Server-Side Admin Route Protection (PRD Section 4.5)', () => {
@@ -25,10 +26,17 @@ describe('Task 8: Production Hardening, Security & Final Verification (PRD 11, 1
       expect(response.headers.get('location')).toBeNull();
     });
 
-    it('allows authenticated users possessing knowra_session cookie to access /admin', () => {
+    it('allows authenticated users possessing valid signed knowra_session cookie to access /admin', () => {
+      const validToken = signSessionToken({
+        id: 'usr_admin',
+        name: 'Admin',
+        email: 'admin@knowra.org',
+        role: Role.ADMIN,
+      });
+
       const req = new NextRequest('http://localhost:3000/admin/submissions', {
         headers: {
-          cookie: 'knowra_session=admin_token_active_xyz',
+          cookie: `knowra_session=${validToken}`,
         },
       });
       const response = middleware(req);
