@@ -8,6 +8,7 @@ Knowra prioritizes the security, data privacy, and integrity of the knowledge in
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 1.0.x   | :white_check_mark: |
 | 0.1.x   | :white_check_mark: |
 
 ---
