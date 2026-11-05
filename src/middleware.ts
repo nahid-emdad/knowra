@@ -1,20 +1,34 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import { verifySessionToken, SESSION_COOKIE_NAME } from '@/lib/auth/session';
+import { Role } from '@prisma/client';
 
 /**
- * Knowra Server-Side Security Middleware
- * Enforces PRD Section 4.5: Server-side authorization protection for all admin routes.
+ * Knowra Cryptographic Security Middleware
+ * Enforces PRD Section 4.5 & K-AUDIT-001:
+ * Cryptographically verifies session token signature and expiration server-side.
+ * Rejects forged, expired, or non-privileged cookies before reaching protected admin routes.
  */
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Protect all /admin routes except /admin/login
   if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
-    const sessionCookie = request.cookies.get('knowra_session');
+    const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME);
 
-    if (!sessionCookie || !sessionCookie.value) {
+    // Cryptographic token verification (HMAC-SHA256 signature + expiration check)
+    const verified = sessionCookie?.value ? verifySessionToken(sessionCookie.value) : null;
+
+    // Check if session is valid and user has at least EDITOR role
+    if (!verified || (verified.role !== Role.ADMIN && verified.role !== Role.EDITOR)) {
       const loginUrl = new URL('/admin/login', request.url);
       loginUrl.searchParams.set('redirect', pathname);
-      return NextResponse.redirect(loginUrl);
+
+      const response = NextResponse.redirect(loginUrl);
+      // Clean up invalid or forged cookie
+      if (sessionCookie) {
+        response.cookies.delete(SESSION_COOKIE_NAME);
+      }
+      return response;
     }
   }
 

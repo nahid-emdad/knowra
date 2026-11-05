@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { NextRequest } from 'next/server';
-import { getAuthenticatedSession, requireRole, DEMO_ADMIN, DEMO_EDITOR } from '@/lib/auth';
+import { requireRole } from '@/lib/auth';
+import { signSessionToken } from '@/lib/auth/session';
 import { INITIAL_SUBMISSIONS, INITIAL_REVISIONS } from '@/lib/data/admin-state';
 import { Role, SubmissionStatus, ReviewDecision } from '@prisma/client';
 
@@ -16,10 +17,17 @@ describe('TASK-004: Admin & Moderation Platform Verification', () => {
       }
     });
 
-    it('ACCEPTS authenticated admin bearer token', () => {
+    it('ACCEPTS cryptographically authenticated admin token', () => {
+      const adminToken = signSessionToken({
+        id: 'usr_admin',
+        name: 'Knowra Editorial Board',
+        email: 'admin@knowra.org',
+        role: Role.ADMIN,
+      });
+
       const adminRequest = new NextRequest('http://localhost:3000/api/v1/admin/overview', {
         headers: {
-          Authorization: 'Bearer admin_token',
+          Authorization: `Bearer ${adminToken}`,
         },
       });
 
@@ -31,10 +39,17 @@ describe('TASK-004: Admin & Moderation Platform Verification', () => {
       }
     });
 
-    it('ACCEPTS authenticated editor session cookie for editor-level routes', () => {
+    it('ACCEPTS cryptographically signed editor session cookie for editor-level routes', () => {
+      const editorToken = signSessionToken({
+        id: 'usr_editor',
+        name: 'Bilingual Reviewer',
+        email: 'editor@knowra.org',
+        role: Role.EDITOR,
+      });
+
       const editorRequest = new NextRequest('http://localhost:3000/api/v1/admin/overview', {
         headers: {
-          Cookie: 'knowra_session=editor_session',
+          Cookie: `knowra_session=${editorToken}`,
         },
       });
 
@@ -46,9 +61,16 @@ describe('TASK-004: Admin & Moderation Platform Verification', () => {
     });
 
     it('REJECTS editor role when ADMIN permission is strictly required (403 Forbidden)', () => {
+      const editorToken = signSessionToken({
+        id: 'usr_editor',
+        name: 'Bilingual Reviewer',
+        email: 'editor@knowra.org',
+        role: Role.EDITOR,
+      });
+
       const editorRequest = new NextRequest('http://localhost:3000/api/v1/admin/system', {
         headers: {
-          Authorization: 'Bearer editor_token',
+          Authorization: `Bearer ${editorToken}`,
         },
       });
 

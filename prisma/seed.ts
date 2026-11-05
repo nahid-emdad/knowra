@@ -1,28 +1,37 @@
 import { PrismaClient, Role, VerificationStatus, SourceType } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log('🌱 Starting Knowra database seeding...');
 
-  // 1. Create Default Users (Admin & Editor)
+  const adminPassword = process.env.INITIAL_ADMIN_PASSWORD || 'AdminSecret2026!';
+  const editorPassword = process.env.INITIAL_EDITOR_PASSWORD || 'EditorSecret2026!';
+
+  const adminHash = bcrypt.hashSync(adminPassword, 10);
+  const editorHash = bcrypt.hashSync(editorPassword, 10);
+
+  // 1. Create Default Users (Admin & Editor) with verified bcrypt password hashes
   const admin = await prisma.user.upsert({
     where: { email: 'admin@knowra.org' },
-    update: {},
+    update: { passwordHash: adminHash },
     create: {
       name: 'Knowra Editorial Board',
       email: 'admin@knowra.org',
       role: Role.ADMIN,
+      passwordHash: adminHash,
     },
   });
 
   const editor = await prisma.user.upsert({
     where: { email: 'editor@knowra.org' },
-    update: {},
+    update: { passwordHash: editorHash },
     create: {
       name: 'Bilingual Reviewer',
       email: 'editor@knowra.org',
       role: Role.EDITOR,
+      passwordHash: editorHash,
     },
   });
 

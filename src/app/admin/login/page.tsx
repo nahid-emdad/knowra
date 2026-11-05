@@ -1,96 +1,72 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { ShieldCheck, Lock, Mail, ArrowRight, AlertCircle, Key } from 'lucide-react';
+import { ShieldCheck, Lock, Mail, AlertCircle, Key, RefreshCw } from 'lucide-react';
 
-export default function AdminLoginPage() {
+function AdminLoginForm() {
   const router = useRouter();
-  const [email, setEmail] = useState('admin@knowra.org');
-  const [password, setPassword] = useState('knowra_admin_2026');
-  const [role, setRole] = useState<'ADMIN' | 'EDITOR'>('ADMIN');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get('redirect') || '/admin';
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus('loading');
+    setLoading(true);
     setError('');
 
-    // Set authentication session cookie for demo / MVP
-    const cookieValue = role === 'ADMIN' ? 'admin_session' : 'editor_session';
-    document.cookie = `knowra_session=${cookieValue}; path=/; max-age=604800; SameSite=Lax`;
+    try {
+      const res = await fetch('/api/v1/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-    setTimeout(() => {
-      setStatus('idle');
-      router.push('/admin');
-    }, 400);
-  };
+      const data = await res.json();
 
-  const selectDemoRole = (selected: 'ADMIN' | 'EDITOR') => {
-    setRole(selected);
-    if (selected === 'ADMIN') {
-      setEmail('admin@knowra.org');
-      setPassword('knowra_admin_2026');
-    } else {
-      setEmail('editor@knowra.org');
-      setPassword('knowra_editor_2026');
+      if (!res.ok || !data.success) {
+        setError(data.error?.message || 'Authentication failed. Please verify credentials.');
+        setLoading(false);
+        return;
+      }
+
+      // Successful server authentication: HttpOnly cookie set by server
+      router.push(redirectPath);
+      router.refresh();
+    } catch {
+      setError('Network communication failure. Please check your connection.');
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-background flex flex-col justify-center items-center px-6 py-12">
-      
       {/* Brand Header */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-8">
-        <Link href="/" className="inline-flex items-center gap-2 mb-4">
-          <span className="w-10 h-10 rounded-xl bg-primary text-primary-foreground font-bold text-xl flex items-center justify-center">
+        <Link href="/" className="inline-flex items-center gap-2 mb-4 group">
+          <span className="w-10 h-10 rounded-xl bg-primary text-primary-foreground font-bold text-xl flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
             K
           </span>
           <span className="font-serif font-bold text-2xl text-foreground">Knowra</span>
         </Link>
         <h1 className="text-2xl font-serif font-bold text-foreground tracking-tight">
-          Editorial & Admin Console
+          Editorial & Administration Gateway
         </h1>
-        <p className="text-xs text-muted-foreground mt-1">
-          Server-authenticated access for editorial reviewers and system administrators
+        <p className="text-xs text-muted-foreground mt-1 max-w-sm mx-auto leading-relaxed">
+          Cryptographically authenticated console for verified editors and platform administrators
         </p>
       </div>
 
       {/* Login Card */}
       <div className="w-full max-w-md bg-card border border-border p-8 rounded-2xl shadow-sm">
-        
-        {/* Role Preset Selector */}
-        <div className="grid grid-cols-2 gap-2 p-1 bg-secondary rounded-xl mb-6 text-xs font-semibold">
-          <button
-            type="button"
-            onClick={() => selectDemoRole('ADMIN')}
-            className={`py-2 rounded-lg transition-all ${
-              role === 'ADMIN'
-                ? 'bg-card text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            Administrator
-          </button>
-          <button
-            type="button"
-            onClick={() => selectDemoRole('EDITOR')}
-            className={`py-2 rounded-lg transition-all ${
-              role === 'EDITOR'
-                ? 'bg-card text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            Editorial Reviewer
-          </button>
-        </div>
-
         <form onSubmit={handleLogin} className="space-y-4">
-          
           {error && (
-            <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-xs flex items-center gap-2">
+            <div className="p-3.5 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs flex items-center gap-2.5">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{error}</span>
             </div>
@@ -99,13 +75,15 @@ export default function AdminLoginPage() {
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
               <Mail className="w-3.5 h-3.5 text-muted-foreground" />
-              <span>Email Address</span>
+              <span>Registered Email Address</span>
             </label>
             <input
               type="email"
               required
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="e.g. editor@knowra.org"
               className="w-full bg-background border border-border rounded-lg px-3.5 py-2.5 text-sm text-foreground focus:outline-none focus:border-accent"
             />
           </div>
@@ -118,31 +96,47 @@ export default function AdminLoginPage() {
             <input
               type="password"
               required
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••••••"
               className="w-full bg-background border border-border rounded-lg px-3.5 py-2.5 text-sm text-foreground focus:outline-none focus:border-accent"
             />
           </div>
 
           <button
             type="submit"
-            disabled={status === 'loading'}
-            className="w-full py-2.5 mt-2 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:opacity-95 transition-opacity flex items-center justify-center gap-2 shadow-sm"
+            disabled={loading}
+            className="w-full py-2.5 mt-2 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:opacity-95 transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-50"
           >
-            <Key className="w-4 h-4" />
-            <span>{status === 'loading' ? 'Authenticating...' : 'Sign In to Console'}</span>
+            {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Key className="w-4 h-4" />}
+            <span>{loading ? 'Verifying Credentials...' : 'Sign In to Console'}</span>
           </button>
-
         </form>
 
-        <div className="mt-6 pt-4 border-t border-border text-center text-xs text-muted-foreground">
+        <div className="mt-6 pt-4 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
           <Link href="/" className="hover:text-foreground underline underline-offset-4">
-            ← Return to Public Knowledge Portal
+            ← Return to Public Portal
           </Link>
+          <span className="font-mono text-[10px] text-muted-foreground/70">
+            Auth: HMAC-SHA256
+          </span>
         </div>
-
       </div>
-
     </div>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-background flex items-center justify-center text-xs font-mono text-muted-foreground">
+          Loading authenticated gateway...
+        </div>
+      }
+    >
+      <AdminLoginForm />
+    </Suspense>
   );
 }

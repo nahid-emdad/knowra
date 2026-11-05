@@ -1,15 +1,15 @@
 # Security Policy
 
-Knowra prioritizes the security, data privacy, and integrity of the knowledge infrastructure.
+Knowra prioritizes the security, cryptographic integrity, and data privacy of our open-source knowledge infrastructure.
 
 ---
 
 ## Supported Versions
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.0.x   | :white_check_mark: |
-| 0.1.x   | :white_check_mark: |
+| Version | Supported          | Security Status |
+| ------- | ------------------ | --------------- |
+| 1.0.x   | :white_check_mark: | Active (Current GA) |
+| < 1.0   | :x:                | Deprecated (Pre-audit alpha) |
 
 ---
 
@@ -17,26 +17,30 @@ Knowra prioritizes the security, data privacy, and integrity of the knowledge in
 
 If you discover a security vulnerability in Knowra, please do **NOT** open a public issue.
 
-Please report the vulnerability responsibly via private email:
-- **Email:** `security@knowra.org` (or directly via GitHub Private Vulnerability Reporting on this repository).
+Please report vulnerabilities responsibly via:
+- **GitHub Private Vulnerability Reporting:** Navigate to the repository's [Security Tab](https://github.com/nahid-emdad/knowra/security) and click "Report a vulnerability".
+- **Security Contact:** The Knowra Core Security Team via GitHub security advisory.
 
 ### Please include in your report:
-1. Description of the vulnerability and its potential impact.
+1. Detailed description of the vulnerability and its potential impact.
 2. Step-by-step reproduction steps or Proof of Concept (PoC).
-3. The affected component, route, or dependency.
-4. Any proposed remediations.
+3. The affected component, file path, route, or dependency.
+4. Any proposed remediation patches.
 
 ### Response Timeline
-- **Acknowledgement:** Within 48 hours.
+- **Acknowledgement:** Within 24-48 hours.
 - **Assessment & Triage:** Within 5 business days.
 - **Fix & Public Advisory:** Coordinated release once a patch is tested and verified.
 
 ---
 
-## Core Security Requirements in Knowra
+## Core Security Standards in Knowra
 
-- **Server-Side Authorization:** Admin operations are strictly verified server-side via session tokens; UI route hiding is never relied upon as an authorization boundary.
-- **SQL Injection Prevention:** All database operations use Prisma parameterized queries; raw SQL queries are audited and parameterized.
-- **XSS Prevention:** Content sanitization on all rendered markdown or external input using React's default escaping and DOMPurify.
-- **Secrets Management:** No API keys, database credentials, or auth secrets are committed to Git. `.env.example` contains placeholders only.
-- **Rate Limiting:** Public read and submission endpoints enforce IP-based rate limiting to prevent abuse.
+- **Server-Side Authentication & Session Integrity:** Admin and editor operations are strictly verified server-side via cryptographically signed HMAC-SHA256 session tokens with expiration tracking.
+- **Cookie Security:** Session cookies are issued with `HttpOnly`, `SameSite=Lax`, and `Secure` (in production) flags, strictly preventing client-side script access and XSS theft.
+- **Password Security:** All user credentials are protected using bcrypt (work factor 12) with unique salts. Passwords are never stored in plaintext.
+- **Role-Based Access Control (RBAC):** Hierarchical role enforcement (`ADMIN` > `EDITOR` > `CONTRIBUTOR` > `USER`) applied at every protected API route, Server Action, and page layout.
+- **SQL Injection Prevention:** All database operations utilize Prisma ORM parameterized queries; raw SQL queries are audited and parameterized.
+- **XSS & Content Sanitization:** Multi-layered HTML and Markdown sanitization applied on all rendered knowledge items.
+- **Zero Committed Secrets:** Credentials, private keys, and session secrets are managed exclusively through environment variables. `.env.example` contains only non-sensitive placeholders.
+- **Defense in Depth Rate Limiting:** Public endpoints enforce IP-based rate limiting to prevent brute-force attacks and abuse.

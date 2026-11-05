@@ -2,6 +2,8 @@ import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { TranslationService } from '@/lib/services/translation';
 import { jsonSuccess, jsonError } from '@/lib/api/response';
+import { requireRole } from '@/lib/auth';
+import { Role } from '@prisma/client';
 
 interface RouteProps {
   params: Promise<{
@@ -15,6 +17,12 @@ const reviewSchema = z.object({
 });
 
 export async function PUT(request: NextRequest, { params }: RouteProps) {
+  // PRD Section 4.5 & K-AUDIT-001: Enforce server-side role check
+  const auth = requireRole(request, Role.EDITOR);
+  if ('errorResponse' in auth) {
+    return auth.errorResponse;
+  }
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -28,8 +36,8 @@ export async function PUT(request: NextRequest, { params }: RouteProps) {
       id,
       parsed.data.action,
       {
-        id: 'usr_admin_01',
-        name: 'Nahid Emdad (Admin Reviewer)',
+        id: auth.session.userId,
+        name: auth.session.name,
       },
       parsed.data.notes
     );
